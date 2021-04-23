@@ -16,18 +16,6 @@ Install pkgs from command line (.deb)
 To update the latest pushed application pkgs
 	sudo apt-get upgrade 
 
-File permission
-To change the ownership of a file
-	sudo chown <username>:<user group> <file name>
-	sudo chown root:abdul file.txt
-To recursively change the username inside directory
-	sudo chown -R <username>:<user group> <directory name>
-	sudo chown -R abdul:abdul ./mydir
-
-To change permission of a file
-	sudo chmod 0-7<user> 0-7<group> 0-7<public> <file name>
-	sudo chmod 777 file.txt
-
 User
 To add user
 	sudo adduser <username>
@@ -37,6 +25,22 @@ To delete user
 	sudo deluser <username>
 To change password 
 	sudo passwd <username>
+
+Group
+To add group
+	sudo groupadd <groupname>
+
+File permission
+To change the ownership/group of a file
+	sudo chown <username>:<user group> <file name>
+	sudo chown root:abdul file.txt
+To recursively change the username inside directory
+	sudo chown -R <username>:<user group> <directory name>
+	sudo chown -R abdul:abdul ./mydir
+
+To change permission of a file
+	sudo chmod 0-7<user> 0-7<group> 0-7<public> <file name>
+	sudo chmod 777 file.txt
 
 Find
 To find a file inside directory
