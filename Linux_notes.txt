@@ -1,0 +1,166 @@
+Linux Commands
+
+To view application via CLI 
+	cd /usr/share/
+
+su - switch user
+
+Pkg Manager
+apt-get install <application name>	- will install packages from ubuntu repository 
+apt-cache search <application name>	- will provide packages present in repository
+apt-cache policy <application name>	- will provide the details of package with reference to local system
+
+Install pkgs from command line (.deb)
+	sudo dpkg -i <.dbm path>	- i (install)
+
+To update the latest pushed application pkgs
+	sudo apt-get upgrade 
+
+File permission
+To change the ownership of a file
+	sudo chown <username>:<user group> <file name>
+	sudo chown root:abdul file.txt
+To recursively change the username inside directory
+	sudo chown -R <username>:<user group> <directory name>
+	sudo chown -R abdul:abdul ./mydir
+
+To change permission of a file
+	sudo chmod 0-7<user> 0-7<group> 0-7<public> <file name>
+	sudo chmod 777 file.txt
+
+User
+To add user
+	sudo adduser <username>
+To provide sudo previlage
+	sudo adduser <username> sudo
+To delete user
+	sudo deluser <username>
+To change password 
+	sudo passwd <username>
+
+Find
+To find a file inside directory
+	find . -type f -name "*.php"	(case sensitive)
+	find . -type f -iname "*.php"	(case insensitive)
+	find /etc -type f -name "sudo*"
+To find specific permission files
+	find . -type f -perm 0664
+To find file above/below 1MB
+	find . -type f -size +1M	(Above 1 MB)
+	find . -type f -size -1M	(Below 1 MB)
+To find file with not
+	find . -type f -not -iname "*.php"
+To avoid finding files in recursive	
+	find /etc -maxdepth 1 -type f -iname "*.conf"
+
+GREP
+To find a string inside file
+	grep "string" ./* 		(Grep the string inside present directory files)
+	grep -i "string" ./*		(Grep the string with ignore case sesitive)
+	grep -n -i "string" ./*		(Grep the string along with line number)
+
+Find + GREP conjection
+To find a string with specific file format
+	find . -type f -iname "*.php" -exec grep -n -i "function" {} +
+
+Redirect the output
+To redirect the ls command
+	ls > file.txt
+To redirect find and greped output
+	find . -type f -iname "*.php" -exec grep -i -n "function" {} + > file.txt
+For displaying the output and redirect
+	find . -type f -iname "*.php" -exec grep -i -n "funciton" {} + | tee file.txt
+
+
+Services
+To display the process running in real time
+	top
+To see complete running process in a snippet
+	ps aux
+To get the process id of specific application
+	pgrep chrome-browser
+To kill specific process id
+	kill -9 <pid>
+To kill all the specific process without pid
+	killall chrome-browser
+To start and stop service
+	service <application> start/stop/restart
+System control
+	systemctl start <application>
+	systemctl stop <application>
+
+Schedule Task using CronTabs
+To edit the crontab 
+	crontab -e
+To schedule a upgrade task of all pkg
+# m  h   dom  mon  dow    command
+0  7   *  *  1 apt-get upgrade -y 	(It will schedule upgrade task every Monday at 7.00 AM)
+
+
+GIT
+
+Initiate Git in the directory
+	git init 		(Go to directory and provide git init)
+Create git repo in browser and copy the repo URL and provide in directory path
+	git remote add origin https://github.com/AbdulRahman-I/python-pi-sample.git
+To config global variables
+	git config --global user.name <name>
+	git config --global user.email <mailid>
+To pull data
+	git pull origin master
+To push data
+	git branch --set-upstream-to=origin/master
+	git add -A			(To select all files)
+	git commit -m "<comments>" 	
+	git push 			(if we didn't add upstream then we need to provide "git push origin master")
+To remove file/folder
+	git rm -r -f <file/folder name>
+	git commit -m "<comments>" 
+	git push
+To ignore a directory
+	git-ignore .directory/
+
+Note- we need to pull the data in everyday basis, if not it may lead to merge conflict.
+
+To perform comparison incase of merge conflict
+	git fetch
+	git merge
+To create new branch in local git
+	git branch <branch name>
+	git push origin <branch name>
+To select branch 
+	git checkout <branch name>
+To merge 2 branch and commit
+	git merge vo1 master
+	git push origin master
+To delete branch from local git
+	git branch -d <branch name>
+	git push origin --delete <branch name>
+
+To install ubuntu desktop on top of ubuntu server
+	sudo apt-get update -y
+	sudo apt-get upgrade -y
+
+	sudo apt-get install tasksel -y
+	sudo tasksel		(select the ubuntu desktop using space and hit enter)
+	
+Server config
+To configure dns on local machine, we can edit below file
+	sudo vi /etc/hosts
+
+To create virtual host in linux
+	1, Create site1/index.html and site2/index.html under /var/www/html/ path
+	2, Create site1.conf and site2.conf under /etc/apache2/sites-available/ path
+		<VirtualHost *:80>
+			ServerName site1.localhost
+			DocumentRoot /var/www/html/site1
+		</VirtualHost>
+	3, Modify Hosts file to add internal routes (site1/site2.localhost)
+		sudo vi /etc/hosts
+	4, Enable sites
+		sudo a2ensite site1 site2
+	5, Reload apache
+		sudo systemctl restart apache2
+	6, open site1.localhost and site2.localhost to check the changes.
+
+
