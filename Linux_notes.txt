@@ -29,6 +29,8 @@ To change password
 Group
 To add group
 	sudo groupadd <groupname>
+to add user to group
+	sudo adduser <username> <groupname>
 
 File permission
 To change the ownership/group of a file
@@ -150,7 +152,7 @@ To install ubuntu desktop on top of ubuntu server
 	
 Server config
 To configure dns on local machine, we can edit below file
-	sudo vi /etc/hosts
+	sudo vi /etc/hosts	(internal DNS records)
 
 To create virtual host in linux
 	1, Create site1/index.html and site2/index.html under /var/www/html/ path
@@ -167,4 +169,35 @@ To create virtual host in linux
 		sudo systemctl restart apache2
 	6, open site1.localhost and site2.localhost to check the changes.
 
+Netstat
+To check the ip routing tabel
+	netstat -nr
+To check interface stat
+	netstat -i
+To check active internet connections
+	netstat -ta		(t - tcp, a - all)
 
+Hostname
+To change the hostname
+	sudo hostnamectl set-hostname <hostname>
+Then modify the internal dns records
+	sudo vi /etc/hosts
+Restart hostname service
+	sudo service hostname restart
+
+Traceroute
+To trace the route of destination hop
+	traceroute <domain name/ip>
+
+Network Mapper (NMAN)
+Installation
+	sudo apt-get install nmap
+To view the post, state and service
+	nmap <ipaddr>
+	nmap -v <ipaddr>	(v - verbose will provide additional info)
+	nmap <range of ip>
+		
+SFTP
+	sftp username@hostname
+	put 			(to push a file)
+	get			(to pull a file)
