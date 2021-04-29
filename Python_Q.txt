@@ -1,0 +1,94 @@
+Python Interview Questions
+
+Keywords
+	> Python keywords are special reserve words
+	> Convey a special meaning to compiler/interpreter
+	> Never use it as a variable
+	> Examples (True, False, from, if, as, lambda, import, etc.,)
+	> Keywords are case sensitive
+
+
+Literals in Python
+	> Literals are constants used in python
+	> Types 			
+		String Literals		(<variable> = "<value>")
+		Numeric Literals	
+			int		<includes both +ve and -ve numbers>
+			Long		<unlimited integers followed by upper or lower case L>
+			Float		<numbers with fractional part>
+			Complex		<real and imaginary part>
+		Boolean Literls		(True or False)
+		Special	Literals	(None  - Used to specify a field is not created)
+
+
+Dictionary
+	> Unordered collection of elements
+	> These elements in dictionary are stored as key:value pairs
+	> Example { <key> : <value> }
+
+
+Classes and Object in python
+	> Classes
+		Blueprint of an object
+	> Objects 
+		Real world entity which are defined and created from classes
+
+
+__init__ method in python
+	> Special method in python classes which is used to initialize the variable
+	> This method is called whenever an object of the class is constructed		
+
+
+Inheritance in python
+	> One class acquiring the property of other class
+
+
+Super()
+	> It invoke the variables and methods from super class
+ 
+
+Numpy()
+	> Linear Algebra libraby in python
+	> Features operation on multi dimensional array and matrices in python
+	> Example
+		tda = np.array( [ [1,1],[2,2] ] )
+		fda = np.zeros((5,5))
+	Sum of a1 and a2 array
+		s = np.sum((a1 , a2), axis=0)
+	Largest value in array
+		
+
+To read a file 
+	f = open("file_path", "r")
+	f.read()
+
+
+Lambda
+	> Anonymous function
+	> It can take any number of arguments but should have only one expression
+	> Example x = lambda variables : expression	(lambda a : a+10 )
+
+
+Module in python
+	> Module helps in logically organizing our python code
+
+
+Randomize the items in the list
+	> We can randomize a list using random.shuffle function
+	> Example shuffle(a)		(it will shuffle the elements in the a list)
+
+
+To identify lenght of the string without len()
+	> for loop
+
+
+Replace odd numbers with -1 (numpy)
+	> import numpy as np
+	> arr = np.arange(0,10)		(it will create a list from 1 to 9)
+	> arr[ arr%2 == 1 ] = -1	(will replace odd items with -1)
+
+
+Common items between 2 nupmy array
+	> import numpy as np
+	> np.intersect1d(arr1, arr2)
+
