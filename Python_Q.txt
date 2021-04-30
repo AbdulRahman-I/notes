@@ -41,7 +41,11 @@ __init__ method in python
 
 Inheritance in python
 	> One class acquiring the property of other class
-
+	> Types
+		1, Single Inheritance 	- classA inher from obj
+		2, Multi-level 		- classA inher from obj and classB inher from classA
+		3, Hierarchical		- classA and classB inher from obj
+		4, Multiple		- classB inher from both obj and classA	
 
 Super()
 	> It invoke the variables and methods from super class
@@ -136,3 +140,10 @@ Monkey patching
 Numerical sorting 
 	> map(int, <list>)
 	> list comprehension 	( int(i) for i in x )
+
+
+"re" module methods
+	> split()	- uses a regex pattern to split given string into a list
+	> sub()		- finds all substring then replace it with different string
+	> subn()	- similar to sub(), additionally it returns the number of replacement
+
