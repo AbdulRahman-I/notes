@@ -92,3 +92,47 @@ Common items between 2 nupmy array
 	> import numpy as np
 	> np.intersect1d(arr1, arr2)
 
+
+Shallow copy and Deep copy
+	Shallow copy
+		> Stores the copy of original object and points the references to the objects
+		> Stores the reference of objects to the original memory address
+		> Changes will be reflected in the original objects
+		> Shallow copy if faster
+
+	Deep copy
+		> Stores the copy of the original object and recursively copies the objects as well
+		> Stores copies of the object’s value
+		> Doesn't reflect the changes to the original object
+		> Comparatively slower.
+		
+List and Tiple
+	List
+		> Lists are mutable	
+		> Implication of iterations is Time-consuming	
+		> The list is better for performing operations, such as insertion and deletion.	
+		> Lists consume more memory
+		> Lists have several built-in methods	
+		> The unexpected changes and errors are more likely to occur	
+
+	Tuple
+		> Tuples are immutable
+		> The implication of iterations is comparatively Faster
+		> Tuple data type is appropriate for accessing the elements
+		> Tuple consume less memory as compared to the list
+		> Tuple does not have many built-in methods.
+		> In tuple, Errors are hard to take place.
+
+
+Ternary operation
+	Identifying big number between x and y
+		> x, y = 5, 10
+		> big = x if x > y else y
+
+Monkey patching 
+	> Dynamic modification of a class or module at run time
+
+
+Numerical sorting 
+	> map(int, <list>)
+	> list comprehension 	( int(i) for i in x )
