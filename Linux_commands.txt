@@ -1,9 +1,40 @@
+Linux
+Linux® is an open source operating system (OS). An operating system is the software that directly manages a system’s hardware and resources, like CPU, memory, and storage. The OS sits between applications and hardware and makes the connections between all of your software and the physical resources that do the work.
+
+Linux-Kernel
+The base component of the OS. Without it, the OS doesn’t work. 
+Low-level system software, main role is to manage hardware resources for the user
+Responsible for translating user commands into computer understandable language
+
+
+Difference b/w linux and unix
+
+Linux
+	> It is an open-source operating system which is freely accessible to everyone.	
+	> It supports more file system than Unix.	
+	> The source is accessible to the general public.	
+Unix
+	> It is an operating system which can be only utilized by its copywriters.
+	> It also supports file system however lesser than Linux.
+	> The source is not accessible to the general public.
+
+
 Linux Commands
 
 To view application via CLI 
 	cd /usr/share/
 
 su - switch user
+Root user
+	> Root user are similar to superuser, like a system administrator
+	> Has ultimate control and access to all files and directories which includes user account creation and managing permissions for each account
+	> Root is default account every time linux is installed
+
+
+Environment variable
+	> ENVs basically define behavior of the environment. 
+	> They can affect the processes ongoing or the programs that are executed in the environment
+
 
 Pkg Manager
 apt-get install <application name>	- will install packages from ubuntu repository 
@@ -94,6 +125,22 @@ To start and stop service
 System control
 	systemctl start <application>
 	systemctl stop <application>
+
+
+To identify the free memory & cpu utilization
+	free -m		(in MB)
+	free -g		(in GB)
+	vmstat		(for virtual)
+	sar		(cpu utilization - system active report)
+
+
+Directory usage
+	> du -sh <directory>
+
+
+To run Linux programs in background
+	> nohup - process will run in background
+
 
 Schedule Task using CronTabs
 To edit the crontab 
