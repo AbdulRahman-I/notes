@@ -50,6 +50,8 @@ Inheritance in python
 Super()
 	> It invoke the variables and methods from super class
  
+Self
+	> reference to current instance of a class and is used to access variables that belongs to the class.
 
 Numpy()
 	> Linear Algebra libraby in python
