@@ -1,0 +1,305 @@
+Python
+
+Variable scope
+A Python statement can access variables in a local scope as well as in the global scope. 
+If some local and the global variable have the same name, the local variable shadows the global variable. 
+Every function has its own local scope. The local variables in the function are the variables that are declared in that function.
+The nonlocal variables of a function are those that are visible in the function but not declared there. generally we use the nonlocal variables inside nested functions.
+
+Global Variable
++++++++++++++++
+x = "value"
+
+def func():
+  global x
+  print (x)
+  x = "inner value"
+  print (x)
+
+func()
+print (x)
+
+#O
+value
+inner value
+inner value
+
+NonLocal Variable
++++++++++++++++++
+x = 20
+
+def func():
+  x = 50
+  def inner():
+    nonlocal x
+    x = 100
+  print ("1st :",x)
+  inner()
+  print ("2nd :",x)
+
+func()
+print ("3rd :",x)
+
+#O
+1st : 50
+2nd : 100
+3rd : 20
+
+
+Python Debugger (pdb)
++++++++++++++
+The Python Debugger or pdb is a module for interactive code debugging.
+Debugging is the process of removing errors from our code. 
+Python Debugger or pdb is perhaps most simple usages is to insert a breakpoint:
+import pdb; pdb.set_trace(). When reached, the debugger is started with the prompt “(Pdb).
+
+Pdb command examples
+help/h: Displays the list of commands
+step/s: Single step the program, step into functions.
+next/n: Single step in the current function
+pp/p: Pretty printing/printing a variable
+cont/c: Continue execution
+quit/q: Quit the debugger
+
+
+Operator Overloading
++++++++++++++++++++++
+Overloading occurs when the same operator or function name is used with different signatures. 
+We can use some operator symbols to define special member functions of a class. 
+Operator overloading Provides convenient notations for object behaviors.
+
+Operator  Expression  FUNCTION
+Math Operator Overloading  
+	Addition(+)  		p1 + p2  	p1.__add__(p2)
+	Subtraction(-)  	p1 - p2  	p1.__sub__(p2)
+	Multiplication(*)  	p1 * p2  	p1.__mul__(p2)
+	Power(**)  		p1 ** p2 	p1.__pow__(p2)
+	Division(/)  		p1 / p2  	p1.__truediv__(p2)
+	Floor Division(//)  	p1 // p2  	p1.__floordiv__(p2)
+	Remainder(%)  		p1 % p2  	p1.__mod__(p2)
+
+import math
+class Circle:
+  def __init__(self,radius):
+    self.__radius = radius
+  def getradius(self):
+    return self.__radius
+  def setradius(self,radius):
+    self.__radius = radius
+  def area(self):
+    return math.pi * self.__radius**2
+  def __add__(self,othercircle):
+    return Circle(self.getradius() + othercircle.getradius())
+  def __lt__(self,othercircle):
+    return (c1.getradius() < c2.getradius())
+  def __gt__(self,othercircle):
+    return (c1.getradius() > c2.getradius())
+  def __str__(self):
+    return ("Circle Area : "+str(self.area()))
+
+c1 = Circle(6)
+c2 = Circle(3)
+c3 = c1 + c2
+print (c1 < c2)
+print (c1 > c2)
+
+print (c3.getradius())
+print (str(c3))
+
+#O
+False
+True
+9
+Circle Area : 254.46900494077323
+
+
+Closure and Nested Functions
++++++++++++++++++++++++++++++
+A Closure is a function object that remembers values which are declared outside the functions.
+In Functional programming Functions are first-class citizens i.e. Functions can be used as any other datatype.
+Functional programming gives The ability to treat functions just like any other values.
+
+Nested func
++++++++++++
+def pop(lst):
+  def mod(my_list):
+    return my_list[len(my_list) - 1]
+    
+  lst.remove(mod(lst))
+  return lst
+  
+a = [1,2,3,4,5]
+
+print (pop(a))
+print (pop(a))
+
+#O
+[1, 2, 3, 4]
+[1, 2, 3]
+
+closure
++++++++
+#1
+def outer(text):
+  def inner():
+    print (text)
+  return inner
+
+  
+a = outer("Hello")
+del outer
+a()
+
+#O
+Hello
+
+#2
+def nth_pow(exp):
+  def pow_of(base):
+    return pow(base,exp)
+  return pow_of
+  
+square = nth_pow(2)
+for i in range (1,6):
+  print (square(i))
+
+#O
+1
+4
+9
+16
+25
+
+
+Decorators
++++++++++++++++++++
+Decorators  wrap a function and modify its  behaviour in some way or the another, without directly  change  the source code of the function being decorated. 
+Func that take other func as arg, add some functionality and returns other function. All this happens without altering the original source code.
+
+def dec_star(func):
+  def star():
+    print ("*" * 10)
+    func()
+    print ("*" * 10)
+  return star
+
+def dec_amp(func):
+  def amp():
+    print ("#" * 10)
+    func()
+    print ("#" * 10)
+  return amp
+
+@dec_amp
+@dec_star
+def say_hello():
+  print ("Hello World")
+
+
+say_hello()  
+#say = dec_amp(dec_star(say_hello))
+#say()
+
+#O
+##########
+**********
+Hello World
+**********
+##########
+
+
+Lambda, Reduce and Map function
++++++++++++++++++++++++++++++++++++
+lambda usually used when func taken as a argument and return func as a argument
+Lambda functions are also called one line functions or anonymous functions
+Anonymous functions are particularly advantageous when using the map, filter and reduce functions. 
+In Functional programming Functions are first-class citizens i.e. Functions can be used as any other datatype, 
+eg: Arguments to function, Return values of functions, Assigned to variables, Parts of tuples, lists, etc. The lambda expression must fit on one line
+
+lambda variables : expr
+map 	(lambda/expr, iteratables)
+filter 	(lambda/expr with condition, iteratable)
+reduce 	(func, iteratable)	>> will return only one output
+
+map
+++++++
+x = [1,2,3,4,5]
+y = map(lambda x : x*2 , x)
+print (list(y))
+
+x = [1,2,3,4,5]
+z = [6,7,8,9,0]
+y = map(lambda x,y : x+y , x,z)
+print (list(y))
+
+filter
+++++++++
+a = [1,2,3,4,5,6]
+b = filter(lambda i: i%2==0 , a)
+print (list(b))
+
+a = [1,2,3,4,5,6,7,8,9]
+b = filter(lambda i: True if i>5 else False, a)
+print (list(b))
+
+reduce
+++++++++
+from functools import reduce
+
+fi_sum = reduce(lambda x,y:x+y , fibo)
+print (fi_sum)
+#
+from functools import reduce
+fibo = [0,1]
+sum = lambda x,y : x+y
+for i in range (0,8):
+  fibo.append(sum(fibo[len(fibo)-1] , fibo[len(fibo)-2]))
+print (fibo)
+fi_sum = reduce(lambda x,y:x+y , fibo)
+print (fi_sum)
+
+
+Iterators
+++++++++++
+Iteration is The process of going over a collections like lists, tuple, dict etc.in order to create our own Iterator class we need to implement
+Iterators are the objects which can be iterated upon. 
+An iterator object implements the iterator protocol and consist of the methods __iter__() and __next__().
+__iter__() is used to get iterator and next() is used to  get next value. Also when the iterator is exhausted it raises StopIteration.
+iter() function Creates a new iterator for an object.   
+
+#
+class ListIter:
+  def __init__(self,mylist):
+    self.mylist = mylist
+    self.index = -1
+  def __iter__(self):
+    return self
+  def __next__(self):
+    self.index += 1
+    return (self.mylist[self.index])
+
+a = [1,2,3,4,5]
+lst = ListIter(a)
+it = iter(lst)
+for i in a:
+  print (next(it))
+
+
+Generators
+++++++++++
+Generators are simple way defining iterators in python.
+Similar to functions, but they keep the state of their variables between calls, and they use yield instead of return. 
+Also calling them again resumes execution after the yield statement.
+Python does not allow 'yield' inside a 'try' block with a 'finally' clause.  
+With Generators we don't need to implement  __iter__() and __next__() methods. 
+In addition The generators raise the StopIteration exception automatically, so generators are much easier to implement then iterators.
+
+# 
+def List_Gen(mylist):
+  for i in mylist:
+    yield i
+
+a = [1,2,3,4,5]
+lst = List_Gen(a)
+for i in a:
+  print (next(lst))
