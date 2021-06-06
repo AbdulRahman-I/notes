@@ -303,3 +303,294 @@ a = [1,2,3,4,5]
 lst = List_Gen(a)
 for i in a:
   print (next(lst))
+
+
+File Handling
+++++++++++++++
+To open a file in python we use open(). open() returns a file object, and is most commonly used with two arguments: open(filename, mode).
+open() returns a “file handle” - a variable used to perform operations on the file
+ 	name = open("filename")		- opens the given file for reading, and returns a file object
+	name.read() 			- file's entire contents as a string
+	name.readline() 		- next line from file as a string
+	name.readlines() 		- file's contents as a list of lines
+r is for reading, if the file does not exist, an error is raised
+w is for writing- If the file exists, the contents are overwritten.  If the file does not exist, it will be created
+a is for appending- If the file exists new data is appended to the end of the file.  If the file does not exist, it will be created
+
+#1
+fh = open("demo.txt","w")
+try:
+    for i in range(1,11):
+        fh.write("This is line number {}\n".format(i))
+finally:
+    fh.close()
+
+#2
+with open("demo.txt","w") as fh:
+    for i in range (1,11):
+        fh.write("This is line number {}\n".format(i))
+
+#3
+with open ("demo.txt") as fh:
+    for i in fh:
+        print (i.strip())
+
+#4
+dupe = []
+with open ("demo.txt") as fh:
+    for i in fh:
+        if (i[:4] == "This"):
+            dupe.append(i.strip())
+print (dupe)
+
+
+__name__ == "__main__"
+++++++++++++++++++++++++
+
+__name__ is a built in variable in Python. the value of __name__  is set to "__main__" at runtime. 
+Each module has a name, and this name can be used to access instructions in a module. This is especially useful in a given situation: 
+But what do we do if we want the block to run only if the module was started as a stand-alone program, but not if it was imported from another module? 
+We can do this by evaluating the attribute __name__ of the module.
+
+
+Exception Handling
++++++++++++++++++++++
+An exception is an event, which happens while the execution of a program, that disrupts the normal flow of the program. 
+When some error error occurs an exception is raised.  
+Normally if we do not use Exception handling the execution of program stops as soon as exception is thrown.
+By default, the interpreter handles exceptions by stopping the program and printing an error message.
+Exception handling in Python.
+	else:  statements executed if no exception
+	finally:clean-up statements always executed 
+#
+try:
+    a = int(input("Enter x value : "))
+    b = int(input("Enter y value : "))
+    c =  (a / b)
+except TypeError as e:
+    print ("Please enter number")
+except ZeroDivisionError as e:
+    print ("Please enter valid divider")
+except ValueError as e:
+    print ("Please enter number")
+else:
+    print ("Else Block c value ", c)
+finally:
+    print ("Complete of test run")
+
+#
+class CoffeeCup:
+    def __init__(self,temp):
+        self.temp = temp
+    def drink(self):
+        if (self.temp > 85):
+            raise Exception("Coffee is too hot to drink")
+        elif (self.temp < 65):
+            raise Exception("Coffee is too cold to drink")
+        else:
+            print ("Coffee is too good to drink")
+cup = CoffeeCup(78)
+cup.drink()
+
+#
+class CoffeeTooHotException(Exception):
+    def __init__(self,msg):
+        super().__init__(msg)
+
+class CoffeeTooColdException(Exception):
+    def __init__(self,msg):
+        super().__init__(msg)
+
+class CoffeeCup:
+    def __init__(self,temp):
+        self.temp = temp
+    def drink(self):
+        if (self.temp > 85):
+            raise CoffeeTooHotException("Coffee temperature : {}".format(self.temp))
+        elif (self.temp < 65):
+            raise CoffeeTooColdException("Coffee temperature : {}".format(self.temp))
+        else:
+            print ("Coffee is too good to drink")
+cup = CoffeeCup(700)
+cup.drink()
+
+
+Abstraction
++++++++++++++
+'abc' stands for Abstract Base Classes (ABCs) is a module we can import to create abstract classes in Python. 
+
+from abc import ABC,abstractmethod
+
+class shape(ABC):
+	@abstractmethod
+	def area(self): pass
+	@abstractmethod
+	def perimeter(self): pass
+	
+class square(shape):
+	def __init__(self,side):
+		self.side = side
+	def area(self): 
+		return (self.side * self.side)
+	def perimeter(self): 
+		return (4*self.side)	
+Sh = square(10)
+print ("Area : ",Sh.area())
+print ("Perimeter : ",Sh.perimeter())
+
+
+Inheritance
+++++++++++++
+Classes in Python can be extended, creating new classes which retain characteristics of the base class and This process, known as inheritance. 
+Python Inheritance Involves a superclass  and a subclass. The subclass inherits the members of the superclass. 
+When we define a subclass, we place the name of the parent(superclass) in parentheses after the subclass’s(child) name on the first line of the definition. 
+   class Child(Parent):
+
+#
+class parameter:
+	def setparam(self, width, height):
+		self.__width = width
+		self.__height = height
+	def getwidth(self):
+		return self.__width
+	def getheight(self):
+		return self.__height
+    
+class rectangle(parameter):
+	def area(self):
+		return (self.getwidth() * self.getheight())
+
+class triangle(parameter):
+	def area(self):
+		return (self.getwidth() * self.getheight()/2)
+
+rec = rectangle()
+tri = triangle()
+rec.setparam(10,100)
+tri.setparam(10,100)
+print ("Rectangle Area : {}\nTriangle Area : {}".format(rec.area(), tri.area()))
+
+
+Import
++++++++
+
+from <module name> import <class/function name> as <alias name>
+
+Multilevel inheritance
+++++++++++++++++++++++++++
+class parameter:
+  def setparam(self, width, height):
+    self.__width = width
+    self.__height = height
+  def getwidth(self):
+    return self.__width
+  def getheight(self):
+    return self.__height
+
+class shape:
+  def setcolor(self,color):
+    self.__color = color
+  def getcolor(self):
+    return self.__color
+
+class rectangle(parameter,shape):
+  def area(self):
+    return (self.getwidth() * self.getheight())
+
+class triangle(parameter,shape):
+  def area(self):
+    return (self.getwidth() * self.getheight()/2)
+
+rec = rectangle()
+tri = triangle()
+rec.setparam(10,100)
+tri.setparam(10,100)
+rec.setcolor("red")
+tri.setcolor("blue")
+
+print ("Rect Color : {}\nTri Color: {}".format(rec.getcolor(),tri.getcolor()))
+print ("Rect Area : {}\nTri Area : {}".format(rec.area(), tri.area()))
+
+
+Super()
+++++++++++++
+super() return a proxy object that delegates method calls to a parent or sibling class of type.
+class.__mro__  attribute is a tuple of classes that are considered when looking for base classes during method resolution
+
+#1
+class parent:
+  def __init__(self,name):
+    print ("in parent __init__()",name)
+    
+class child(parent):
+  def __init__(self):
+    print ("in child __init__()")
+    super().__init__("Abdul Rahman")
+
+c = child()
+#OP
+in child __init__()
+in parent __init__() Abdul Rahman
+
+
+#2
+class child(parent,parent2):
+  def __init__(self):
+    print ("in child __init__()")
+    parent2.__init__(self,"Rahman",25)
+    parent.__init__(self,"Rahman")
+
+
+Composition
++++++++++++++
+Composition allows us to delegate some responsibility from one class to another class.
+In Class Composition one class acts like a Container and other acts like a content. 
+Composition represents "part-of" relationship. 
+when there is a composition between two Python classes , the content object cannot exist without the container object.
+
+#
+class Salary:
+  def __init__(self,sal,bonus):
+    self.sal = sal
+    self.bonus = bonus
+  def getsal(self):
+    return (self.sal*12 + self.bonus)
+
+class Employee:
+  def __init__(self,name,age,sal,bonus):
+    self.name = name
+    self.age = age
+    self.salary = Salary(sal,bonus)
+
+  def annualsal(self):
+    return self.salary.getsal()
+
+e1 = Employee("Tom", 28, 35000, 20000)
+print (e1.annualsal())
+
+
+Aggregation 
+++++++++++++
+Aggregation represents Has-A relationship.
+Aggregation has a unidirectional association i.e. a one way relationship between associated classes.
+In Aggregation, both the associate class objects can survive individually.
+
+#
+class Salary:
+  def __init__(self, sal, bonus):
+    self.sal = sal
+    self.bonus = bonus
+  def getsalary(self):
+    return (self.sal*12 + self.bonus)
+
+class Employee:
+  def __init__(self, name, age, salary):
+    self.name = name
+    self.age = age
+    self.salary = salary
+  def annualsal(self):
+    return self.salary.getsalary()
+
+salary = Salary(35000, 20000)
+e1 = Employee("Mike", 29, salary)
+print (e1.annualsal())
