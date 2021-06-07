@@ -594,3 +594,150 @@ class Employee:
 salary = Salary(35000, 20000)
 e1 = Employee("Mike", 29, salary)
 print (e1.annualsal())
+
+
+Encapsulation
+++++++++++++++
+It allow us to group data and the subroutines that operate on them together in one place, and to hide irrelevant details from the user.
+Making objects and algorithms invisible to portions of the system that do not need them. Encapsulation promotes code reuse. 
+
+#
+class Rectangle:
+  def __init__(self,width,height):
+    self.__width = width
+    self.__height = height
+  def setwidth(self,val):
+    self.__width = val
+  def getwidth(self):
+    return self.__width
+  def setheight(self,val):
+    self.__height = val
+  def getheight(self):
+    return self.height
+  def area(self):
+    return self.__width*self.__height
+
+rect1 = Rectangle(10,10)
+rect2 = Rectangle(9,8)
+rect1.setwidth(15)
+print (rect1.area())
+print (rect2.area())
+
+
+Private variable and method
++++++++++++++++++++++++++++++
+A double underscore makes the variable Private  which makes it harder to access but still possible.
+
+#
+class Public:
+  def __init__(self):
+    self.a = "Public variable a"
+    self.__b = "Private variable b"
+  def __privatemethod(self):
+    print ("In Private method..")
+  def publicmethod(self):
+    print ("In Public method..")
+  def getPrivate(self):
+    print (self.__b)
+    self.__privatemethod()
+
+access = Public()
+print (access.a)
+access.publicmethod()
+access.getPrivate()
+
+#O
+Public variable a
+In Public method..
+Private variable b
+In Private method..
+
+
+Procedural and Object-Oriented Programming
++++++++++++++++++++++++++++++++++++++++++++
+
+Procedural Programming 
+----------------------------------------------
+C, Pascal
+unit – function
+concentrates on creating functions
+data and operations on the data are separated.
+methodology requires sending data to procedure/functions.
+
+Object-Oriented Programming
+---------------------------------------------------------
+C++, Java, Python
+unit – class
+concenteres on creating objects
+Object: A single software unit that combines data and methods
+Data in an object are known as attributes.
+ Procedures/functions in an object are known as methods.
+
+
+In Python, everything is an object i.e. integers, strings, dictionaries, …
+Class objects are instantiated from user-defined classes. 
+Classes in python can be defined anywhere in the program. 
+
+#
+class dummy:
+  def __init__(self):
+    print ("__init__ method")
+  def atom():
+    print ("Atom")
+  atom()
+
+dum = dummy()
+
+#O
+Atom
+__init__ method
+
+
+init and self
++++++++++++++++
+__init__  method is used as a constructor for the class. 
+Usually __init__  does some initialization work e.g. initialize attributes and other functions.
+The arguments passed to the class name are given to its __init__() method. 
+It would be incorrect to call __init__ constructor of the class. 
+
+Self is the first argument of every method is a reference to the current instance of the class.  
+
+multiple constructors in python
++++++++++++++++++++++++++++++++++
+Unlike Java or C++, we cannot define multiple constructors in python. 
+But, we can define a default value if one is not passed or we can use *args, **kwargs as arguments.
+
+
+Function
+++++++++++
+Function is a block of statements within a program that perform as particular task.
+It can be executed in order to perform overall program task.
+There are two kinds of functions in Python, First are Built-in functions - print(), type(), float(), max() etc. 
+Second type are Functions that we define ourselves and then use (user defined functions). 
+Functions make you code Simpler, reusable i.e. write the code once and call it multiple times, easy to test and debug
+
+Args
++++++++
+Python allows us to  provide default values for a function’s arguments. These arguments are optional when the function is called.
+
+Passing lists as arguments def sum(*args): - Lists can be passed in cases where there may be a variable number of arguments 
+Passing dictionaries to functions def functionName(**kwargs).
+
+#
+class Student:
+  def __init__(self, name, age, **marks):
+    self.name = name
+    self.age = age
+    self.marks = marks
+  def getrecord(self):
+    print ("Name :",self.name)
+    print ("Age :",self.age)
+    print ("\nMarks")
+    for key,val in self.marks.items():
+      print ("{} : {}".format(key,val))
+
+s1 = Student("Anbu", 25, History=86, Chemistry=87)
+s1.getrecord()
+
+
+
