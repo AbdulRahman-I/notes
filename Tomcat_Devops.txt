@@ -1,0 +1,107 @@
+Tomcat Server
+++++++++++++++
+Tomcat
+	- It is a java based Application server.
+
+Types of Servers
+	1, Web Server
+	2, Application Server
+
+1, Web Server
+	- Processes HTTP requests
+	- Serves Static content (html, images, etc)
+	- No Databases or dynamic generation of html
+	- Package (Apache2, httpd)
+
+2, Application Server
+	- Serves Business logic to application programs through various protocols
+	- Handles all application operations b/w organization backend application/databases.
+	- Parts of Application server (Web container, Application client, EJB container)
+	- Types (Apache Tomcat, Jboss)
+
+Installation
++++++++++++++
+
+Pre-requisites
+	Java v1.8.x
+
+
+1,Download tomcat packages from https://tomcat.apache.org/download-80.cgi onto /opt of Linux server
+	# Create tomcat directory
+	- cd /opt
+	- wget http://mirrors.fibergrid.in/apache/tomcat/tomcat-8/v8.5.35/bin/apache-tomcat-8.5.35.tar.gz
+	- tar -xvzf /opt/apache-tomcat-8.5.35.tar.gz
+
+2, Untar file and Rename to tomcat
+
+3, Need to comment class in "context.xml" file from webapp
+	- find / -name context.xml
+
+4, Goto conf/tomcat-user.xml file and add below lines to update users information 
+	<role rolename="manager-gui"/>
+ 	<role rolename="manager-script"/>
+ 	<role rolename="manager-jmx"/>
+ 	<role rolename="manager-status"/>
+ 	<user username="admin" password="admin" roles="manager-gui, manager-script, manager-jmx, manager-status"/>
+ 	<user username="deployer" password="deployer" roles="manager-script"/>
+ 	<user username="tomcat" password="s3cret" roles="manager-gui"/>
+
+5, Go to tomcat/bin and run ./startup.sh
+
+6, To stop run ./shutdown.sh
+
+For Windows
+1, Go to Apache Tomcat download link
+
+2, Download windows installer and run
+
+Default Port	: 8080
+If we need to change the port then go to 
+	conf/server.xml and update >> Connector port
+	
+Roles
+++++++
+	manager-gui 	— Access to the HTML interface.
+	manager-status 	— Access to the "Server Status" page only.
+	manager-script 	— Access to the tools-friendly plain text interface that is described in this document, and to the "Server Status" page.
+	manager-jmx 	— Access to JMX proxy interface and to the "Server Status" page.
+
+To change max file size of war file
+	cd /opt/tomcat/webapps/manager/WEB-INF
+	vi web.xml
+		<max-file-size>52428800</max-file-size>
+ 		     <max-request-size>52428800</max-request-size>
+
+Key Directories
++++++++++++++++
+/bin		- startup and shutdown bash/sh file
+/conf		- configuration files
+/lib		- tomcat's jar files and ext libs
+/logs		- log files
+/temp		- temp files used by jvm
+/webapps	- deployed java web apps
+/work		- temp files for deployed web apps
+
+Deployment	>> Web Application Resource(war)
+++++++++++++
+Two ways
+	1, Server side
+	2, Client side
+
+1, Server side
+	- Deploy directory or WAR file located on server
+		context path 	: /<app name>
+		WAR dir		: <war file path>
+2, Client side
+	- Upload the war file from localhost directory
+
+
+Deployed war file will be under
+	/opt/tomcat/webapps
+
+
+Issues Faced
+++++++++++++++++
+1, Tomcat started but application not running
+Solution:- 	Go to conf/server.xml >> change the Shutdown port "8005" to "8006"
+		Restart tomcat 
