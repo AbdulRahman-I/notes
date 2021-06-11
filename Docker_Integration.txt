@@ -1,0 +1,73 @@
+Create username and pwd
+	adduser dockeradmin
+	passwd dockeradmin
+	usermod -aG docker dockeradmin
+	id dockeradmin
+
+To display the running containers
+	docker ps
+
+To List the image
+	docker image ls
+
+To pull image from Docker hub
+	docker pull tomcat:latest
+
+To run container
+	docker run --name tomcat-container -p 8080:8080 tomcat:latest
+	#detached mode
+	docker run -d --name tomcat-container -p 8080:8080 tomcat:latest
+	
+To stop and delete container
+	docker stop <container id>
+	docker rm <container id>
+
+To login to docker container
+	docker exec -it <container name> /bin/bash
+
+To add into Jenkins
+	Install Publish over SSH plugin
+	Go to  Manage Jenkins >> publish over SSH
+		Add SSH Server
+			Name 		: docker-host
+			Ip		: <Private IP addr>
+			username	: <Docker user name>
+		click Use password authentication, or use a different key
+			Password	: <password>
+		Change the password auth to yes
+			vi /etc/ssh/sshd_config
+
+Create Jenkins job similar to Tomcat and do below mod
+	PostBuildAction
+		SSH Servername
+		Transfers
+			source file webapp/target/*.war
+	Save and run the build
+	.war will be copied to docker container
+
+Create Dockerfile to copy the .war 
+	# Pull tomcat latest image from dockerhub 
+	From tomcat:8.0
+	# Maintainer
+	MAINTAINER "AR Shankar" 
+	# copy war file on to container 
+	COPY ./webapp.war /usr/local/tomcat/webapps
+
+Need to build image from Dockerfile
+	docker build -t <image name> .
+
+Run the image in container
+	docker run -d --name devops-tomcat -p 8080:8080 devops-project
+
+Before deploying 
+	remove webapp.war, docker image and container
+
+
+Disadvantage of Jenkins as CD 
+1, When we trigger build with poll scm, 
+    then there will be a scenario already container running with same container name
+	we cannot create a container with same name.
+2, We can trigger the runs if we know the target environment
+	what if we run jenkins in multiple server
+
+To overcome these issues we use Ansible.
