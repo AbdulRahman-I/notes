@@ -1,0 +1,370 @@
+Maven
+++++++
+	- Project Management and Build Automation Tool
+	- It helps managing the project
+	- open source java based tool
+	- Uses Convention over Configuration (Dev follows procedure)
+
+Advantages
+	- Makes easy to build project in diff environments
+	- No worries about the dependency, we can add it easily
+
+Maven can manage below stages in a repetitive manner
+	Configs
+	Dependency Management
+	Download src code
+	Initialization
+	Compile
+	Packaging
+	Unit Test
+	Acceptance Test
+	Deployment
+	Document
+	Report
+	Clean
+-----------------------------------------------
+
+History
+Evaluotion of Project management tools
+Makefile -> ant -> Maven -> Gradle
+
+Difference between Ant and Maven
+Ant
+	- We need to write all the build configutions manually
+Maven
+	- Most of the build configurations are automated, Just need to create pom.xml
+
+Maven Installation
+Pre requisite	- Java 8.0
+	Download Maven.tar/zip from download page
+	Extract it in C:// or /opt/
+	Set : MAVEN_HOME/bin -> PATH
+
+To verify the installation
+	mvn -v
+
+Maven working
++++++++++++++
+
+Maven s/w divided into 2 
+	- Maven Core		(Understand the plugins)
+	- Maven Plugins		(Features of Maven)
+		- Core Plugins
+		- External Plugins
+
+
+Expected mvn command
+====================
+<plugin-prefix>:<goal> or <plugin-group-id>:<plugin-artifact-id>[:<plugin-version>]:<goal>.
+
+Lifecycle
+------------
+Software	Code -> Analysis -> Compile -> Test -> Package -> Deploy -> AT -> Release  (PHASES)
+	we can jump back to any phase, but that phase will start the life cycle from first
+
+Maven Lifecycles
+	- Default	23 Phases
+	- Clean		3 Phases
+	- Site		4 Phases
+
+Default	> Handles the project deployment
+Clean	> Looks after the project cleaning
+Site	> Creation of project's site documentation
+
+
+Available lifecycle phases are: 
+validate, initialize, generate-sources, process-sources, generate-resources, process-resources, compile, process-classes, 
+generate-test-sources, process-test-sources, generate-test-resources, process-test-resources, test-compile, process-test-classes, 
+test, prepare-package, package, pre-integration-test, integration-test, post-integration-test, verify, install, deploy, pre-clean, 
+clean, post-clean, pre-site, site, post-site, site-deploy.
+
+With the help of Goals we are reaching specific phase of Lifecycle
+
+Lifecycle	Phase		Goal
+		compile		compile
+		test		test
+		package		package
+		install		install
+		deploy		deploy
+
+Phase	- Name of a stage in Lifecycle
+Goal	- To reach a Phase, It comes from Plugins
+
+Version
+	Release		2.0, 2.0.1, 2.0.4			- MAJOR, MINOR, PATCH
+	Snapshot	2.0-SNAPSHOT, 2.0.1-SNAPSHOT		- Unstable Builds
+
+Package support on MAVEN
+	- jar, war, pom, ear 
+
+Most commonly used:
+Build Preparation
+Compile
+Testing
+Packaging
+Versioning
+Cleanup
+
+Architecture
+Maven  ->  pom.xml  ->  Maven repository
+	- Read pom.xml
+	- download dependency into local repo
+	- create and generate report according to goals,plugins and lifecycle phases.
+
+Plugin Example with Project Directory Structure
+-----------------------------------------------
+mvn archetype:generate
+-DgroupId=com.cloudops.software
+-DartifactId=CloudService
+-DarchetypeArtifactId=maven-archetype-quickstart
+-DinteractiveMode=false
+
+mvn		- tool
+archetype	- plugin name to create project structure
+generate	- goal name
+groupId		- package structure	(com.microsoft.software)
+artifactId	- feature		(word - Unique name, Project name most of the case)
+
+>> We don't need to mention plugin name everytime in mvn CLI, 
+	cause goals will automatically calls plugin.
+
+Project Object Model (pom.xml)
+	- Contains all information about our project
+	- Project file, Maven will look into this file first.
+	- It contains
+		Dependencies, Developers and Contributors, Plugins & Configuration, Resources
+	- Required elements for POM
+		project root, modelversion, groupid, artifactid, version
+
+[root@jenkins CloudService]# tree
+.
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── cloudops
+    │               └── software
+    │                   └── App.java
+    └── test
+        └── java
+            └── com
+                └── cloudops
+                    └── software
+                        └── AppTest.java
+
+11 directories, 3 files
+
+Compile	- mnv compile	
+	> Download necessary plugins from repo, compile and store in target
+------------------------------------ 
+[root@jenkins CloudService]# tree
+.
+├── pom.xml
+├── src
+│   ├── main
+│   │   └── java
+│   │       └── com
+│   │           └── cloudops
+│   │               └── software
+│   │                   └── App.java
+│   └── test
+│       └── java
+│           └── com
+│               └── cloudops
+│                   └── software
+│                       └── AppTest.java
+└── target
+    ├── classes
+    │   └── com
+    │       └── cloudops
+    │           └── software
+    │               └── App.class
+    └── maven-status
+        └── maven-compiler-plugin
+            └── compile
+                └── default-compile
+                    ├── createdFiles.lst
+                    └── inputFiles.lst
+
+20 directories, 6 files
+
+Test - mvn test
+	> Download necessary plugins from repo, test and store in target
+------------------------------------
+[root@jenkins CloudService]# tree
+.
+├── pom.xml
+├── src
+│   ├── main
+│   │   └── java
+│   │       └── com
+│   │           └── cloudops
+│   │               └── software
+│   │                   └── App.java
+│   └── test
+│       └── java
+│           └── com
+│               └── cloudops
+│                   └── software
+│                       └── AppTest.java
+└── target
+    ├── classes
+    │   └── com
+    │       └── cloudops
+    │           └── software
+    │               └── App.class
+    ├── maven-status
+    │   └── maven-compiler-plugin
+    │       ├── compile
+    │       │   └── default-compile
+    │       │       ├── createdFiles.lst
+    │       │       └── inputFiles.lst
+    │       └── testCompile
+    │           └── default-testCompile
+    │               ├── createdFiles.lst
+    │               └── inputFiles.lst
+    ├── surefire-reports
+    │   ├── com.cloudops.software.AppTest.txt
+    │   └── TEST-com.cloudops.software.AppTest.xml
+    └── test-classes
+        └── com
+            └── cloudops
+                └── software
+                    └── AppTest.class
+
+27 directories, 11 files
+
+Cleanup - mvn clean
+	> Download necessary plugins from repo and remove the target folder.
+---------------------------------
+[root@jenkins CloudService]# tree
+.
+├── pom.xml
+└── src
+    ├── main
+    │   └── java
+    │       └── com
+    │           └── cloudops
+    │               └── software
+    │                   └── App.java
+    └── test
+        └── java
+            └── com
+                └── cloudops
+                    └── software
+                        └── AppTest.java
+
+11 directories, 3 files
+  
+Packageing - mvn package
+	> Download necessary plugins from repo, create jar file into target
+-----------------------------------
+[root@jenkins CloudService]# tree
+.
+├── pom.xml
+├── src
+│   ├── main
+│   │   └── java
+│   │       └── com
+│   │           └── cloudops
+│   │               └── software
+│   │                   └── App.java
+│   └── test
+│       └── java
+│           └── com
+│               └── cloudops
+│                   └── software
+│                       └── AppTest.java
+└── target
+    ├── classes
+    │   └── com
+    │       └── cloudops
+    │           └── software
+    │               └── App.class
+    ├── CloudService-1.0-SNAPSHOT.jar
+    ├── maven-archiver
+    │   └── pom.properties
+    ├── maven-status
+    │   └── maven-compiler-plugin
+    │       ├── compile
+    │       │   └── default-compile
+    │       │       ├── createdFiles.lst
+    │       │       └── inputFiles.lst
+    │       └── testCompile
+    │           └── default-testCompile
+    │               ├── createdFiles.lst
+    │               └── inputFiles.lst
+    ├── surefire-reports
+    │   ├── com.cloudops.software.AppTest.txt
+    │   └── TEST-com.cloudops.software.AppTest.xml
+    └── test-classes
+        └── com
+            └── cloudops
+                └── software
+                    └── AppTest.class
+
+28 directories, 13 files
+
+Install - mvn install
+	> install the package into the local repository, 
+	> for use as a dependency in other projects locally.
+
+Deploy 	- mvn deploy
+	> Final phase in an integration or release environment
+	> copies the final package to the remote repository for sharing with other developers and projects.
+
+
+Dependency Management
+++++++++++++++++++++++
+Maven support 2 kinds of Repos
+	- Maven Local		-> /root/.m2/repo (or) /home/.m2
+	- Maven Central		-> https://repo.maven.apache.org/maven2/
+	- Private		-> Archiva, Nexus, Artifactory
+
+Private Repo adv
+	- What if we want to use the common dependency in multiple project internally
+	- We cannot keep our own dependency repo in central repo.
+
+
+Maven dependency workflow
++++++++++++++++++++++++++
+	MVN -> pom.xml -> Local Repo -> Central Repo
+					Private Repo
+
+1, Maven tries to grep the dependency from pom.xml
+2, If it is available in Local repo (.m2) then performs task
+3, Else it will check central repo (maven repo)
+	if it is not found then build will get failed
+4, If we want to use our libs then we can try using Private repo (Nexus)
+	We can proxy Central repo into Nexus along with our libs
+
+
+Maven Questions
++++++++++++++++
+
+1, What is Maven
+
+2, Different phases in Maven build Lifecycle
+	Compile -> Test compile -> Test -> Package -> Integration Test -> Verify -> Install -> Deploy 
+
+3, Command used to build Maven Site
+	-mvn site 	-> resulting site by default is target/site/..
+
+4, Project Full name
+	<Groupid>: <artifactid>: <version>
+
+5, Maven Artifact
+	- Refers to a file, usually JAR/WAR that get deployed into repo
+	- Every artifact has it groupid, artifactid and version to identify
+
+6, Maven plugins
+	- Reuse the common build logic accross several projects
+	- It carries out task like Code complie, test, packaging and documentation of project
+
+7, Types of plugins
+	Build Plugins
+	- exec during build, configured in <build/> element of pom.xml
+	Reporting plugins
+	- exec during stage generation, configured in <reporting/> element of pom.xml
+
