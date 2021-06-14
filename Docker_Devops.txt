@@ -1,0 +1,331 @@
+Docker
+++++++++
+
+Container
+---------
+	- A way to package application with all necessary dependency and configs
+	- Portable Artifact, easily shared and moved around
+	- Makes development and deployment more efficient
+	- Layers of images > mostly linux based images > Application image on top
+
+where do containers live?
+	- Container Repository
+	- Public repo for Docker	> Docker Hub
+	- Private repo			> On-premise repo
+
+Before Containers
+	- We need to install all dep s/w into local dev system
+	- Installation process vary with each OS environment
+	- Many Steps, something may go wrong.
+
+After Containers
+	- Own Isolated environment >> no need to deploy on local systems
+	- One command to install the app
+	- Packaged with all needed configuration
+	- Run same app with 2 different version
+
+Docker vs Virtual machine
+	VM 	>> Hardware - Hypervisor/system OS - VM OS - Application
+	Docker	>> Hardware - System OS - Docker - Application
+
+Docker adv
+	- Docker image size is comparatively less
+	- Container starts and run much faster
+	- Container runs mostly on light weight OS
+
+Docker disadv
+	- Docker image of linux based applications are not compatible with Windows based Kernel
+	- Before installation we need to check the compatibality on windows.
+
+Docker Installation
+--------------------
+	Docker Toolbox >> For older Windows and MAC OS
+Windows
+	> OS Version check 
+	> Virtualization enable check	>> Task Manager->Performance
+
+https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9
+
+
+Docker Basics
+++++++++++++++
+Tags >> Version
+
+docker run <image name>		>> Attached mode
+docker run -d <image name>	>> Detached mode
+docker stop/start		>> reload
+docker run			>> pull the image and start run 
+	- Without mentioning port number, Docker will not allow other host to communicate
+	- By default internal ports are assigned from images
+	- We can have multiple application running on same internal port
+We can create binding using -p with docker run 
+	- if we use same external port, we will get "port is already allocated" error
+
+
+Docker Debugging
+++++++++++++++++
+To view the logs for debugging
+	> docker logs <container ID/name>
+To get the terminal
+	> docker exec -it <Container name> /bin/bash
+	it	- Interactive terminal
+		- Logs us in to virtual terminal
+
+Docker run	>> To create a new container
+Docker start	>> To restart a stopped container
+stream the logs
+	docker logs <container id> | -f
+
+techworld-js-docker-demo-app
++++++++++++++++++++++++++++++
+1, Download mongo and mongo-express images in docker
+2, Need to create n/w between mongo db and mongo express
+	docker network create mongo-network
+3, mongodb
+	docker run -d --name mongodb -p 27017:27017 --net mongo-network -e MONGO_INITDB_ROOT_USERNAME=admin -e MONGO_INITDB_ROOT_PASSWORD=password mongo
+4, mongo express
+	docker run -d --name mongo-express -p 8081:8081 --net mongo-network -e ME_CONFIG_MONGODB_ADMINUSERNAME=admin -e ME_CONFIG_MONGODB_ADMINPASSWORD=password -e ME_CONFIG_MONGODB_SERVER=mongodb mongo-express
+5, Check the port 8081 >> we could see the mongo express
+
+6, Create user-account database
+	will be using this db with node 
+7, Run server.js in Node server
+
+To communicate between different services in a host we need to keep in same network
+	> Docker network create <name>
+
+Docker Image
+++++++++++++
+	> Template for creating an environment of our choice
+	> Snapshot
+	> Has all the dependency to run App
+	> OS, Software, App Code
+
+Docker Compose
+++++++++++++++
+	> Structured way of containing Docker commands in yaml
+	> It takes care of containing common network, we don't need to mentioned explicitely.
+	> docker-compose -f <filename.yaml> up/down
+
+Note:- If we restart the container, the data will get lost
+
+Docker File
+++++++++++++++
+	> Blueprint of building images
+	> RUN command exec inside the container
+	> COPY command exec on Host machine
+	> CMD command refers entry point command
+
+.dockerignore file
+++++++++++++++++++
+	> To ignore a specific file
+    	    .dockerignore
+		node_modules
+		Dockerfile
+		.git
+
+Caching and Layering
+++++++++++++++++++++
+	> For a small change in src-code the build image follows all the steps
+	> instead we can cache the steps, by copying the stable pkg earlier	> package*.json.
+
+Tags
++++++++
+	> If we create a image with same name and tag, Then old image name and tag will become <none>
+	> docker tag <image name>:<old tag> <image name>:<new tag>
+
+Docker Registry
++++++++++++++++++
+	> Public
+	    - DockerHub
+	> Private
+	    - AWS ECR (Elastic Container Registory)
+	    - Nexus
+	    - DigitalOcean
+		
+
+Private Docker Repository
+++++++++++++++++++++++++++
+	> Private Repository for Docker	- Docker Registry
+	> Docker Registry for pushing container images	
+	  
+
+Difference b/w aws and other repo
+	> In AWS we create per image registry, we can have n number of versions of a single image
+	> Whereas in other services, we can push other images as well in single registry.
+
+
+Docker Inspect
++++++++++++++++
+	> Provides complete details of container in json format
+	> docker inspect <container name/id>
+
+Docker Logs
+++++++++++++++
+	> To get the container logs on the console
+	> docker logs -f <container name/id>
+	    -f -- follow up
+
+Project
+++++++++++++
+	- Go to EKS
+	- Create private repo of my-app
+	- After creating repo >> click on "View Push Command"
+	- Check AWS CLI installed on Docker, If yes we need to take access key and security from IAM
+	- Provide CLI to perform docker login
+	- Perform Tagging
+	    > If we don't tag repository name fully then while pushing it will go to Docker Hub repo by default
+	    > So we need to tag with respective AWS ECR repo name
+	    > docker tag my-app:1.0 375397414074.dkr.ecr.ap-south-1.amazonaws.com/my-app:1.0
+	- Push the tagged image to ECR
+	    > docker push 375397414074.dkr.ecr.ap-south-1.amazonaws.com/my-app:1.0
+	- Till now we are created a private image, but we stil need mongo images to work with
+	    > We need to create a Docker compose file in such a way to use both private image and docker hub images in single run
+
+To pull the required docker images in to dev/prod server
+	- we need to login with aws cli
+	- we don't need loging for dockerhub as it is public repo
+
+Network
+	- To connect with other container, we need to provide <container name> instead of <ip address>
+
+
+Docker Volumes
+++++++++++++++
+	> With the help of Volumes we will be able to communicate between Host and Container 
+	> Data Persistance	- databases
+
+- Container uses Virutal File System to store the data, if we reboot data will be lost.
+- Data gets automcatically replicated from host to container if we create it.
+- 3 types Volume	
+	- Host Volume		>> docker run -v <host volume path>:<container volume path>
+	    We can decide where on the host file system the reference is made.
+	- Anonymous Volumes	>> docker run -v <container volume path>
+	    For each container a folder is generated in random path
+	- Named Volumes		>> docker run -v name:<container volume path>
+	    Volume will be mounted randomly but we can reference the volume by name
+	    We will be using most in Production.
+- Container level volume
+	> Defines the mapping of volume
+- Service level volume
+	> Define the list of volume used in container
+
+- We can have same volume name for 2 different containers
+	We can share the volume accross the containers
+	
+- mongo db container level 
+	volumes:
+	    - mongo-data:/data/db
+
+- mongo db service level
+	volumes:
+	    mongo-data:
+		driver: local
+
+To Share the volume between 2 containers
+	> docker run -d --name website_copy -p 8081:8081 --volumes-from <container name> <image name>
+
+Way we can try copying artifact into container
+	> Using Hosted Volume while creating docker container (docker run -v <host volume>:<container volume>)
+	> Using Dockerfile with COPY 
+
+
+Docker Volume Location in Local Machine
+++++++++++++++++++++++++++++++++++++++++
+
+Windows		: C:\ProgramData\docker\volumes\
+Linux		: /var/lib/docker/volumes/
+mac		: /var/lib/docker/volumes/
+
+Docker Swarm
++++++++++++++
+	> Clustering and Scheduling tool for Docker Containers
+	> We can establish and manage a cluster of Docker nodes as a single virtual systems.
+	> Dictributed architecture
+		- Docker Leader		>> Will monitor the health status of workers
+		- Workers		>> Will run the containers
+	> To make a docker leader
+		- docker swarm init --advertise-addr=<private ip>	>> will get cli to add into swarm
+	> To list the docker node
+		- docker node ls
+	> To leave the cluster
+		- docker swarm leave
+
+Questions 
++++++++++++
+Beginner
+1, 	Hypervisor
+2, 	Virtualization
+3, 	Containerization
+4, 	Difference between Virtualization and Containerization
+5, 	Docker
+6, 	Docker Containers
+7, 	Docker Images
+8, 	Docker hub
+9, 	Docker Architecture
+10, 	DockerFile
+11,	Docker Compose
+12,	Docker Swarm
+13,	Docker Namespace
+14,	Lifecycle of Docker Container
+15,	Docker Machine
+
+Intermediate
+1, Docker client and server version check
+	> docker version
+
+2, To check the number of containers running and image
+	> docker info
+
+3, Help
+	> docker --help
+
+4, Login to docker
+	> docker login
+
+5, Base image and modify
+	> docker pull <image name>:<version tag>
+
+6, Create docker container from image
+	> docker run --name <name> <image name>:<version tag>
+
+7, Command to check running docker container
+	> docker ps
+
+8, Access running container
+	> docker exec -it <container name> /bin/bash 
+
+9, Start, Stop and Kill Container
+	> docker start <Cont name>
+	> docker stop <Cont name>
+	> docker kill <Cont name>
+
+10, To Edit and Update a container
+	> docker commit <container id> <username/imagename>
+
+11, How to push to docker hub
+	> docker push <image name>:<version tag>
+
+12, To delete a stoped container and image
+	> docker rm <container name/id> 
+	> docker rmi <image name/id>
+	> docker rmi -f  $(docker images --format "{{.ID}}")
+
+13, To build docker file
+	> docker build -t <image name> .
+
+14, Docker System prune
+	> This command is used to remove unused networks, stopped containers, images and build caches
+
+15, Docker diff from other containerization methods
+	> Very easy to deploy in any cloud platform
+	> It can run more apps on same hw than other technologies
+
+16, Possible status of Docker container
+	> Created - Running - Paused - Restarting - Exited - Dead
+
+17, We canno't remove paused container from docker
+	> Containers can be removed only after stopped.
+
+18, Containers cannot restart by themselves
+
