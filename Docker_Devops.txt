@@ -7,6 +7,7 @@ Container
 	- Portable Artifact, easily shared and moved around
 	- Makes development and deployment more efficient
 	- Layers of images > mostly linux based images > Application image on top
+	- Running instance of docker image
 
 where do containers live?
 	- Container Repository
@@ -24,9 +25,25 @@ After Containers
 	- Packaged with all needed configuration
 	- Run same app with 2 different version
 
+Docker
+	- Tool for running applications in an isolated environment
+	- Similar to Vm
+	- App run in same environment
+
 Docker vs Virtual machine
-	VM 	>> Hardware - Hypervisor/system OS - VM OS - Application
-	Docker	>> Hardware - System OS - Docker - Application
+	
+VM
+	> Hardware - Hypervisor/system OS - VM OS - Application
+	> Abstraction of physical hardware turning one server into many
+	> Hyperviso allows multiple VMs to run on single machine
+	> Each VM includes a fully copy of OS, apps, bins and libs taking more space
+	> VMs can also be slow to boot
+
+Docker container
+	> Hardware - System OS - Docker - Application
+	> Abstraction at app layer that pkgs code and dependencies together
+	> Multple containers can run on same machine and share OS kernel with other container
+	> Each container runs isolated processes in user space
 
 Docker adv
 	- Docker image size is comparatively less
@@ -184,7 +201,7 @@ Project
 
 To pull the required docker images in to dev/prod server
 	- we need to login with aws cli
-	- we don't need loging for dockerhub as it is public repo
+	- we don't need logging for dockerhub as it is public repo
 
 Network
 	- To connect with other container, we need to provide <container name> instead of <ip address>
@@ -192,14 +209,19 @@ Network
 
 Docker Volumes
 ++++++++++++++
+	> All the container related files are stored under docker volumes
+	> Common path /var/lib/docker/volume
+	> Volumes will not get delete if we remove the container
+	> We need to explicitely remove		- docker rm -fv <container name>
 	> With the help of Volumes we will be able to communicate between Host and Container 
 	> Data Persistance	- databases
 
-- Container uses Virutal File System to store the data, if we reboot data will be lost.
+- Container uses Virtual File System to store the data, if we reboot data will be lost.
 - Data gets automcatically replicated from host to container if we create it.
 - 3 types Volume	
 	- Host Volume		>> docker run -v <host volume path>:<container volume path>
 	    We can decide where on the host file system the reference is made.
+	    Map both the Host and Container volume, if we do changes in Host it will reflect in Container	
 	- Anonymous Volumes	>> docker run -v <container volume path>
 	    For each container a folder is generated in random path
 	- Named Volumes		>> docker run -v name:<container volume path>
@@ -329,3 +351,12 @@ Intermediate
 
 18, Containers cannot restart by themselves
 
+19, Diff Between RUN and CMD in docker file
+RUN	> lets you execute commands inside of your Docker image
+	> Executed once at build time and get written into your Docker image as a new layer.
+
+CMD 	> lets you define a default command to run when your container starts
+	> Run-time operation, but we still need to re-build our Docker image to change what CMD does
+
+20, To check performance of container in Docker
+	> docker stats
