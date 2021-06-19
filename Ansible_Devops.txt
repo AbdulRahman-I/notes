@@ -1,0 +1,199 @@
+Ansible
+	- Configuration Management Tool
+	- Open Source Automation Tool
+
+Eariler
+	- If we need to install some service in 100's of server
+	- We need to login to each and every server 	>> more manual work
+	- Else we can automate with shell script	>> serial execution will take more time
+	- To run same task in multiple servers we go with configuration management tool
+
+Advantages
+	- Ansible will exec a task on all servers parallelly
+	- Writing shell script is complex compare to playbooks
+	- Agentless architecture (Pushing mechanism)	>> No external sofware install on remote server
+	- Uses Python and YAML for configuration
+	- Predefined modules for system management
+	- Ansible helps to perform
+	  > Configuration Management
+	  > Application Deployment
+	  > Task Automation
+	  > IT Orchestration
+
+Ansible Architecture
+	> Main server	- Ansible Engine/Control/Master Node
+	> Remote server	- Ansible Manage Nodes/Clients 
+	> Ansible inventory file
+	  - Containes host ip addr
+	> Ansible Config file (Ansible.cfg)
+	  - Containes host username, passwrd and parameters 
+
+Working
++++++++
+	> Whenever we provide ad-hoc command
+	  -> Ansible will look into config file (ansible.cfg) to take inventory file details
+	  -> Ansible connects to the manage node with SSH
+	  -> Required modules will be pushed to manage node to perform task
+	  -> Task performed on manage nodes
+	  -> After performing task, modules will be removed from manage nodes
+	> Note
+	  -> Whenever we exec ad-hoc cmd/playbook, required modules will be pushed to 
+		/home/ansadmin/.ansible/tmp
+	  -> We can keep those modules by enabling below flag in control node
+		ANSIBLE_KEEP_REMOTE_FILES = 1
+	  -> To exec cmd parallelly on 12 servers, then we need to set below in conf file
+		forks = 12
+	
+
+Ansible Installation
+	> Using Yum		- Automatically creats /etc/ansible folder
+	> Using PIP		- /etc/ansible will not be created. we need to create manually
+	> Using Compile file
+
+Steps to configure Ansible 
+	> Requirements for Managed Node/Clients
+	  - Python 2.7 or later
+	> Controller uses SSH Connections to connect and work with Manage nodes.
+`	  SSH Connection
+	  - Password Authentication
+	  - Password-less Authentication		
+	> Provide Manage Nodes IP in inventory host file on Ansible Engine
+	> Test configuration
+	  - ansible all -m ping
+	> If we don't have python in manage node then we need to use raw modules
+
+Passwordless Auth
+	> Create "ansadmin" user in all the nodes
+	> Provide "ansadmin" NOPASSWD ALL in /etc/sudoers or visudo
+	> Enable PasswordAuth in /etc/ssh/sshd_config and restart sshd service
+	> Generate ansadmin ssh-key in control node using "ssh-keygen"
+	> Exchange keys with other nodes using "ssh-copy-id ansadmin@<node ip>"
+	> Try login to manage node without providing password
+
+Directory Structure
+	> Default Ansible home /etc/ansible/
+	  - ansible.cfg
+	  - hosts
+	  - roles
+	> hosts		- Inventory file which has the details of manage node ip
+	> ansible.cfg	- configuration parameters
+	
+Grouping Host
+	> If we have 100 servers, we need to perform some task only on 75 servers
+	> Then we can create groups in hosts file 
+	  - [group_name]
+	    <node ip>
+	    [group_name]
+	    <node ip>
+	  ansible group_name -m ping
+	> We can also group multiple groups - Group of Groups
+	  - [main_group_name:children]
+	    sub_groups
+
+Config File
+	> To check which config file been mapped	-> ansible --version
+	> We can also set the "ANSIBLE_CONFIG" in env
+	> Config file search flow
+	  ENV --> Current/Home Directory --> Default Ansible Home path
+
+Host key checking
+	> Confirmation message while trying to login to the server for first time
+	> To avoid this we can try below 
+	  - Temporary	- export ANSIBLE_HOST_KEY_CHECKING = False
+	  - Permanent	- Set "host_key_checking" = False in ansible.cfg file
+
+Modules
+	> Predefined Programs
+	> With the help of Modules, will be able to perform some task on manage nodes
+
+Way to communicate with manage nodes
+	> Ad-hoc commands
+	> Playbook
+
+Ad-hoc Command
+	> One-liner ansible command that perform one task on target host/group
+	> Example
+	  -> ansible <node/group name> -m ping
+	  -> ansible <node/group name> -m shell -a "uptime"
+	> Ad-hoc command syntex
+	  -> ansible [-i <inventory file> optional] [all/host/group name] -m <module name> [-a "<command>" arguments (optional)]
+
+Module Doc
+	> ansible-doc -l
+
+
+Transfer file between control and manage nodes
+From control to manage nodes
+	> ansible [all/host/group name] -m copy -a "src=<src_file_path> dest=<dest_file-path>"
+	  -> ansible db -m copy -a "src=./hosts dest=/tmp/inventory"
+	> If we copy the same file again, Ansible will not copy as src file is unchanged	> idempotence	
+	> To Transfer a content 
+	  -> ansible db -m copy -a "content='This is from copy module' dest=/tmp/hello.txt backup=yes"
+
+From manage to control nodes
+	> ansible [all/host/group name] -m fetch -a "src=<src_file_path> dest=<dest_file-path>"
+	  -> ansible db -m fetch -a "src=/tmp/inventory dest=./hosts/"
+		Tree structure - hosts >> <node ip> >> tmp >> inventory
+
+	> To fetch the file without directory structure
+	  -> ansible db -m fetch -a "src=/tmp/inventory dest=./hosts/{{inventory_hostname}}_inventory flat = yes"
+
+
+Create and Delete file/directory
+Create File
+	> ansible db -m file -a "path=/tmp/hello.txt state=touch mode='0777'"
+
+Remove File
+	> ansible db -m file -a "path=/tmp/hello.txt state=absent"
+
+Create Directory
+	> ansible db -m file -a "path=/tmp/node state=directory"
+
+To perform sudo task, add "-b" become suffic
+	> ansible db -m file -a "path=/etc/node state=directory" -b
+
+To list the host used for the command
+	> ansible db -m ping --list-hosts
+
+To install a package
+	> ansible db -m yum -a "name=git state=latest/present" -b
+
+Ansible Facts
+	> Information about manage nodes like OS distrib, release, process etc..
+	> Task of collecting this manage node info is called as Gathering Facts
+	> Collected information is called as facts or variable
+	> We can Gather/Collect facts using "setup" module
+	> Note: Ansible playbook calls this setup module by default to collect facts.
+	> Syntex: ansible db -m setup 	>> returns the result inform of dictionary
+	> To get specific info
+	  -> ansible db -m setup -a "filter=ansible_mounts"
+	> Types
+	  -> Default facts
+	  -> Custom facts	>> require to get userdefined facts
+	> Custom facts creation
+	  -> Create /etc/ansible/facts.d on manage nodes
+	  -> Inside facts.d dir place .fact files and provide exec permission
+	  -> Output of the file should be json
+
+Dynamic Inventory
+	> If we power off and on our servers in aws cloud, we could see the change in ip
+	> Due to which we will not be able to communicate witn manage node with old inventory file
+	> To avoid such scenario we go with dynamic inventory file	
+	> Download ec2.py nad ec2.init files to control node
+	> Link : https://github.com/ansible/ansible/tree/stable-2.9/contrib/inventory
+	> ansible -i ec2.py ec2 -m ping
+
+Raw Module
+	> What if we don't have python install in one of our manage node
+	> In this case, we can use ram module
+	> Quiet complex to perform some task
+	> ansible db -m raw -a "uptime"
+
+Note:
+	> if we see denied: requested access to the resource is denied
+	  -> Add docker login CLI into playbook
+
+	> To limit our playbook execution on specific host, we can add
+	  ->  --limit <host-ip> in cli
+
+
