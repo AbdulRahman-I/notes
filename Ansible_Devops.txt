@@ -189,11 +189,58 @@ Raw Module
 	> Quiet complex to perform some task
 	> ansible db -m raw -a "uptime"
 
+Debug Module
+	> Prints statement during execution and can be useful for debugging
+	> Three parameters	
+	  - msg 	>> Print message while running Playbook
+	  - var 	>> Display only variable output
+	  - verbosity	>> If set then msg will display only if verbosity matches  [verbosity: 2 --> -vv]
+
+Command line arguments
+	> Useful to pass variables from command line
+	  -> ansible-playbook debug_wk.yml -e "x=34"
+
+Comparison operators
+---
+- hosts: localhost
+  vars:
+  - x: 10
+  - y: 20
+
+  tasks:
+  - name: Comparing X and Y variable
+    debug:
+      msg:
+      - "Value of X: {{x}} and Value of Y: {{y}}"
+      - "x == y: {{x == y}}"
+      - "x != y: {{x != y}}"
+      - "x > y: {{x > y}}"
+      - "x < y: {{x < y}}"
+      - "x >= y: {{x >= y}}"
+      - "x <= y: {{x <= y}}"
+
+
 Note:
 	> if we see denied: requested access to the resource is denied
 	  -> Add docker login CLI into playbook
 
 	> To limit our playbook execution on specific host, we can add
 	  ->  --limit <host-ip> in cli
+
+	> To read variables while running playbook
+	  -> vars_prompt: \n name : \n prompt: 
+
+	> Playbook to install and uninstall multiple pkgs
+
+ansible-playbook update_pkg.yml -e "pkg_name=git req_state=present"
+---
+- hosts: localhost
+  become: true
+  tasks:
+  - name: install package {{pkg_name}} into manage nodes
+    yum:
+      name: "{{pkg_name}}"
+      state: "{{req_state}}"
+
 
 
