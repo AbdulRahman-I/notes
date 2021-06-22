@@ -3,7 +3,7 @@ Maven
 	- Project Management and Build Automation Tool
 	- It helps managing the project
 	- open source java based tool
-	- Uses Convention over Configuration (Dev follows procedure)
+	- Uses Convention over Configuration (decr num of decisions programmers has to make and eliminate the complexity)
 
 Advantages
 	- Makes easy to build project in diff environments
@@ -119,11 +119,12 @@ mvn archetype:generate
 -DarchetypeArtifactId=maven-archetype-quickstart
 -DinteractiveMode=false
 
-mvn		- tool
-archetype	- plugin name to create project structure
-generate	- goal name
-groupId		- package structure	(com.microsoft.software)
-artifactId	- feature		(word - Unique name, Project name most of the case)
+mvn			- tool
+archetype		- plugin name to create project structure
+generate		- goal name
+groupId			- package structure	(com.microsoft.software)
+artifactId		- feature		(word - Unique name, Project name most of the case)
+archetypeArtifactId	- template used for creating java projects
 
 >> We don't need to mention plugin name everytime in mvn CLI, 
 	cause goals will automatically calls plugin.
@@ -308,16 +309,20 @@ Packageing - mvn package
 
 Install - mvn install
 	> install the package into the local repository, 
-	> for use as a dependency in other projects locally.
+	> for using it as a dependency in other projects locally.
 
 Deploy 	- mvn deploy
 	> Final phase in an integration or release environment
-	> copies the final package to the remote repository for sharing with other developers and projects.
+	> Copies the final package to the remote repository for sharing with other developers and projects.
 
 
 Dependency Management
 ++++++++++++++++++++++
-Maven support 2 kinds of Repos
+Repository
+	- Maven downloads the required artifact of build, dependencies and plugins configured as part of project
+	- There should be common place to store, which is said to be Repository
+
+Maven support 3 kinds of Repos
 	- Maven Local		-> /root/.m2/repo (or) /home/.m2
 	- Maven Central		-> https://repo.maven.apache.org/maven2/
 	- Private		-> Archiva, Nexus, Artifactory
@@ -359,12 +364,45 @@ Maven Questions
 	- Every artifact has it groupid, artifactid and version to identify
 
 6, Maven plugins
-	- Reuse the common build logic accross several projects
+	- Reuse of common build logic across several projects
 	- It carries out task like Code complie, test, packaging and documentation of project
 
 7, Types of plugins
 	Build Plugins
 	- exec during build, configured in <build/> element of pom.xml
 	Reporting plugins
-	- exec during stage generation, configured in <reporting/> element of pom.xml
+	- exec during site generation, configured in <reporting/> element of pom.xml
 
+8, Install external jar/war file into local repo
+	-> mvn install: install-file -Dfile=<artifact file location>
+		-DgroupId=<groupId>  -Dartifactid=<custom artifactId>
+		-Dversion=<version>  -Dpackaging=jar
+
+	-> Change the dependency in pom file as well
+		<dependency>
+		    <groupId> 		</groupId>
+		    <artifactId>	</artifactId>
+		    <version>		</version> 
+		</dependency>
+
+9, To change the local repository
+	- We need to modify setting.xml under maven conf folder
+	- Uncomment localRepository and provide path 
+
+10, JFrog Artifactory
+	- Download tar.gz and untar under /opt
+	- Go to bin/.artifactory.sh
+	- GUI localhost:8081
+	- For setting.xml
+		Set me up >> Generate Maven setting >> Generate and Download
+	- Copy Setting.xml into .m2/
+	- Next we need to add Distribution Management into pom.xml file
+		Set me up >> Copy deploy snippet >> Paste into our pom.xml file 
+	
+	<distributionManagement>
+	    <repository>
+		<id>		</id>
+		<name>		</name>
+		<url>		</url>
+	    </repository>
+	</distributionManagement>	
