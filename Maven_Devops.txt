@@ -401,8 +401,54 @@ Maven Questions
 	
 	<distributionManagement>
 	    <repository>
-		<id>		</id>
+		<id>  central	</id>
 		<name>		</name>
 		<url>		</url>
 	    </repository>
+	    <snapshotRepository>
+		<id>  snapshot	</id>
+		<name>		</name>
+		<url>		</url>
+	    </snapshotRepository>
 	</distributionManagement>	
+
+11, JFrog Artifactory
+	Repositories
+	    - Local	-> To Store Project Package
+	    - Remote	-> PROXY of master repo, if any changes happen it will automatically reflect
+
+	Repository URL
+	    - http://<hostname>:<port>/artifactory/<repo name>
+
+Default port number : 8081
+
+	pom.xml		- Repo location, Package Name
+	setting.xml	- Access
+
+	<servers>
+	    <server>
+		<id>	  central	</id>
+		<username>		</username>
+		<password>		</password>
+	    </server>
+	    <server>
+		<id>	  snapshot	</id>
+		<username>		</username>
+		<password>		</password>
+	    </server>
+	</servers>
+
+Note: 	Both server id and repository id should be same
+	Before deploy we need to check the version name and packaging
+
+For downloading from artifactory, we need to enable mirror element in setting.xml
+
+	<mirror>
+	    <id>	 central	</id>
+	    <name>	    		</name>
+	    <url>			<url>
+	    <mirrorOf>	      *		<mirrorOf>
+	</mirror>
+
+Jenkins integration
+https://github.com/ravdy/DevOps/blob/master/Artifactory/Integrate_Artifactory_with_Jenkins.md
