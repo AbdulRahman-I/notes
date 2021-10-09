@@ -452,3 +452,42 @@ For downloading from artifactory, we need to enable mirror element in setting.xm
 
 Jenkins integration
 https://github.com/ravdy/DevOps/blob/master/Artifactory/Integrate_Artifactory_with_Jenkins.md
+
+https://www.jfrog.com/confluence/display/JFROG/Declarative+Pipeline+Syntax
+
+rtServer (
+    id: 'Artifactory-1',
+    url: 'http://my-artifactory-domain/artifactory',
+    // If you're using username and password:
+    username: 'user',
+    password: 'password',
+    // If you're using Credentials ID:
+    credentialsId: 'ccrreeddeennttiiaall',
+    // If Jenkins is configured to use an http proxy, you can bypass the proxy when using this Artifactory server:
+    bypassProxy: true,
+    // Configure the connection timeout (in seconds).
+    // The default value (if not configured) is 300 seconds:
+    timeout: 300
+)
+
+rtUpload (
+    serverId: 'Artifactory-1',
+    specPath: 'path/to/spec/relative/to/workspace/spec.json',
+ 
+    // Optional - Associate the uploaded files with the following custom build name and build number.
+    // If not set, the files will be associated with the default build name and build number (i.e the
+    // the Jenkins job name and number).
+    buildName: 'holyFrog',
+    buildNumber: '42',
+    // Optional - Only if this build is associated with a project in Artifactory, set the project key as follows.
+    project: 'my-project-key'
+)
+
+
+withCredentials([usernamePassword(credentialsId: 'e62a9887-d2c7-4e9f-9421-215799f9ae6b', passwordVariable: 'passwd', usernameVariable: 'uname')]) {
+	sh 'echo $passwd'
+        // also available as a Groovy variable
+        echo uname
+        // or inside double quotes for string interpolation
+        echo "username is $uname"
+}
