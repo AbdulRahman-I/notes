@@ -105,3 +105,8 @@ Issues Faced
 1, Tomcat started but application not running
 Solution:- 	Go to conf/server.xml >> change the Shutdown port "8005" to "8006"
 		Restart tomcat 
+
+
+To change the default page view, we can change the .php prior to .html
+	vi /etc/apache2/mods-enabled/dir.conf
+	
