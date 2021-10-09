@@ -1,0 +1,35 @@
+
+Install Apache
+	apt-get install apache2
+
+Install MariaDB
+	apt-get intall mariadb-client mariadb-server -y
+
+Configure and Secure Database
+	mysql_secure_installation
+
+Install PHP
+	apt-get install php php-mysql php-cli php-gd php-common
+
+Download the Wordpress, Extract and Copy to /var/www/html path
+
+Change to web preference of apache and reload
+	/etc/apache2/mods-available/dir.conf
+
+Will see the Wordpress with Database option
+
+Login to MariaDb and create Db with username and pwd
+	mysql -u root -p
+Create DB
+	create database wordpress;
+Create username and pwd
+	create user "<username>"@"%" identified by "<password>";
+Grant privilages
+	grant all privileges on <db name>.* to "username"@"%";
+
+Provide necessary details and click on run to install
+
+
+RHEL 8
+dnf install php-mysqlnd php-fpm mariadb-server httpd tar curl php-json
+
