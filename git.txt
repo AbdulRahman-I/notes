@@ -1,0 +1,153 @@
+Create SSH keys
+    1, ssh-keygen
+	It will generate id_rsa and id_rsa.pub inside /root/.ssh
+
+    2, Start ssh agent
+	eval $(ssh-agent -s)	
+
+    3, Add id_rsa into agent
+	ssh-add ~/.ssh/id_rsa	
+
+    4, Copy Public key into GitHub
+	settings > SSH and GPG keys > new SSH keys
+	    Title - username
+	    Keys  - id_rsa.pub key
+
+To view the info about remote repo
+    1, <local repo>/.git/config
+
+To identify the diff 
+    git diff HEAD HEAD~2
+
+GIT SHOW
+    git show <sha code>/HEAD
+	Will display the changes happened in that specific commit
+	(authorship, timestamp, commit message, diff from previous commit).  
+
+To identify the user who introduce the issue
+    git annotate <file name>
+	Will display the user changes of each line with timestamp, sha code
+    To perform same action with github 
+	Go to file and click on 'blame'
+
+To go previous commit
+    git checkout <previous sha code>
+
+To go back to previous head position
+    git switch -
+
+Branches
+    It is always a good practice to have seperate branch for Dev and Prod Environment.
+    It avoids various conflicts and helps us to improve the quality
+    Only working code will be pushed to Prod branch to avoid instability
+
+Branching Stratergy
+    Test >> QA >> Prod
+    By creating new Branch, we are creating snapshot of existing branch
+	will enhance the code with new branch
+	If new branch commit worked fine, then will commit with master branch
+
+List Branch
+    git branch -l
+
+To create and switch
+    git checkout -b <branch name>
+
+To merge branches
+    Go to destination branch where you want merge to happen (master)
+    git merge test
+	(Number of commit additionally done on Test branch + one merge commit)
+
+Merge confilcts
+    Dev1 is pulling the code from master branch, did some changes on a file2 and push it back to master
+    Dev2 created new branch from master, did changes into file2. Pulled the code from remote repo
+
+[root@monitoring demorepo]# git merge dev
+Auto-merging file2
+CONFLICT (content): Merge conflict in file2
+Automatic merge failed; fix conflicts and then commit the result.
+
+
+Fork
+    Git Clone - Cloning our own repository into local machine
+    Git Fork  - Cloning other repository into our own repository directly
+
+Pull Request
+    Fork others repo into our repo
+    Clone our repo into local machine
+    Modify the changes and push it into our repo
+    Now we need to push the same in the others repo as well by using Pull Request
+
+	git merge - To merge 2 different branch within same repository
+	pull req  - To merge 2 different account repository
+
+Private Repo
+    We will not be able to clone the repo with HTTPS, It will ask credentials. only auth person will be able to access
+    But with SSH we will be able to clone the repo as the credentials are already shared with Github.
+
+Collaborators
+    Suppose other person actively working on forked repo and sending pull request frequently
+    If we trust them then we can add them as collaborators to work closely into our repo
+	<Repository>  > settings > Manage access > Invite a collaborator
+    Access will be provided only for that repo
+	Note: collaborator should have cloned that repository earlier, else it will not work
+
+Protected Branch
+    Since we gave access to other person, What if he broke the running application
+    To avoid this, It is always a good practice to use seperate branch before committing it into master branch
+	Create New branch (Dev)
+	<Repo>  >  settings  >  Branches  >  Branch Protection rule
+	    Branch name pattern  	- master
+    	    Protect matching branches	- Require pull request reviews before merging
+    If we try to commit in protected branch, it will create a new branch and ask to open Pull Request for merging.
+	Review 
+	    - comment (Suggessions)
+	    - approve
+	    - request changes (address the comments before merging)
+    Once reviewer approved the pull request, we will get option to merge into master branch 
+
+Tags
+    instead of using <sha code> to go to specific commit, we can tag and make a new pointer
+    Ref's that points to sepcific commit in git history
+    Used to capture point in history - marked version release (v1.0.1)
+    Like a branch that doesn't change
+	git tag			- to check tags
+	git tag v1.0.1		- New tag will be created on Latest commit (HEAD -> master)
+	git tag -a v1.0.2 <sha>	- to create next tag
+	git push origin v1.0.1	- to commit 
+
+Reverting Changes
+    Working Directory
+	git restore <file name>
+		or
+	git chechout -- <file name>
+
+    Staging Area
+	git restore --staged <file name>
+	git restore <file name>
+
+    Local Repository
+	git reset HEAD~
+	git restore <file name>
+
+Git Rebase
+    Used to squeeze multiple commits into one commit
+	If we did relevent commits and dont want to see many commits in Git repo
+	git rebase -i HEAD~4(Number of commits - 1)
+	  pick		- To pick the commit which we want to keep
+	  squash 	- To squash remaning commits
+
+Git Pull
+    git pull origin master
+    Does 2 activity
+	Sync remote repo with local repo
+	Pull the changes into working directory
+	  Git Fetch + Git Merge
+
+Git Fetch
+    git fetch origin master
+    Does only one activity
+	Sync remote repo with local repo
+    To get the changes into working directory
+	git merge is used
+    If we don't want to disturb working directory, then we can use git fetch
