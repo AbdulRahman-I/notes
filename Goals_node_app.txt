@@ -1,0 +1,72 @@
+Goals Node Application
+
+Tools Used
+GIT
+Jenkins
+Ansible
+Docker_prod
+
+> We push our code into Git, with Dockerfile and docker-compose.yml
+> Jenkins will copy these dependencies into Ansible using publish over ssh
+> In Ansible we will be creating playbooks for creating, deploying image in docker_pods
+
+create_image.yml
+---
+- hosts: localhost
+  gather_facts: no
+  become: true
+  become_user: ansadmin
+  tasks:
+    - name: Create Docker image
+      args:
+        chdir: ../Test_env
+      command: docker-compose build
+
+
+copy_image.yml
+---
+- hosts: localhost
+  gather_facts: no
+  become: true
+  become_user: ansadmin
+  tasks:
+    - name: Copy Docker image
+      command: docker push abdismai/nodeapp
+    - name: Remove image
+      command: docker-compose down --rmi all
+      args:
+        chdir: ../Test_env
+
+deploy_image.yml
+---
+- hosts: docker_pods
+  gather_facts: yes
+  become: true
+  become_user: ansadmin
+  tasks:
+    - name: Remove Node App
+      command: docker rm -fv node_container
+      ignore_errors: yes
+    - name: Remove Node image
+      command: docker rmi -f abdismai/nodeapp
+      ignore_errors: yes
+    - name: Create Container
+      command: docker run -d --name node_container -p 3000:80 abdismai/nodeapp
+
+install docker
+---
+- hosts: docker_pods
+  become: true
+  tasks:
+    - name: install docker into manage nodes
+      yum:
+        name: docker
+        state: present
+    - name: Add ansadmin into docker group
+      command: usermod -aG docker ansadmin
+    - name: Start and Enable Docker into manage nodes
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
