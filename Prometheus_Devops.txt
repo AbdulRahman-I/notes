@@ -1,0 +1,102 @@
+Prometheus
+	- Monitoring Tool	
+	- Useful for Highly dynamic container environment
+	- Useful for Container, Node and Microservice infrastructure monitoring
+
+
+Why using Monitoring tool
+	- Due to increase in more number or servers and containers, Manually monitoring infrastructure becomes complex
+	- Difficult to find which microservice failed if services are dependent
+
+Use case of Prometheus
+	- We can Trigger alert if storage space goes low
+
+Prometheus arch/working
+    Main Component
+	- Prometheus server
+		Does the actual monitoring work
+		1, Time Series Database		- stores metrics data
+		2, Data Retrieval Worker	- Getting/Pulling data from Application, service, servers and stores into Db
+		3, HTTP Server			- Server api. Accepts queries from stored data, 
+						  Also used to display data via dashboard (prometheus web UI / Grafana..) 
+
+Targets and Metrics
+    - Targets
+	Linux/Windows Server
+	Apache Server
+	Single Application
+	Service, like Database
+
+    - Metrics
+	Based on Target services
+	CPU Status, Memory/Disk Space Usage..
+	Gets saved in Prometheus Database component
+	
+	Metrics entries: TYPE and HELP attributes
+	    HELP  : Description of what the metrics is
+	    TYPE  : 3 TYPE
+		1, Counter	- How many times it happened..			rate()
+		2, Gauge	- What is current value of x now..		avg_over_time()
+		3, Histogram	- How long or how big..
+
+
+How Prometheus collects data
+	- It Pulls the data from target HTTP Endpoint
+	- Default: hostaddress/metrics
+	- Target must expose data in metrics endpoint
+	- Available metrics data must be in prometheus understandable format
+	- If metrics data is not in understandable format then we use "Exporter" component
+
+Exporter Component
+	- Script/Service 
+	  -> That fetches metrics
+	  -> converts to correct format
+	- -> expose converted data in its own /metrics endpoint
+
+
+Advantages over other monitoring tool
+	- AWS Cloudwatch and Relic uses Push mechanism
+	- Application/Server push to centralize collection platform
+	    High Load of network traffic
+	    Monitoring can become your bottleneck
+	    Install additional software or tool to push metrics
+	- With Prometheus pull mechanism, better detection/insight if service is up and running
+
+
+Configuration
+	- prometheus.yml
+	  -> we define which target and on what interval
+
+Default .yml file
+
+global:
+<How often Prometheus will scrape its target and evaluate them>
+
+rule_files:
+<Aggregating metric values or creating alerts when condition met>
+
+scrape_configs:
+<Controls what resource Prometheus monitors>
+
+
+Alert Manager
+	- Prometheum triggers the alerts with the help of Alertmanager component
+	- Server reads the alert rules  >push>  Alertmanager  >notify>  email,etc..
+ 
+
+Prometheus Data Storage
+	- Stores the data on Disk (HDD/SSD) Local time series Db
+	- Else we can set with remote storage systems
+	- Data stored in Custom Time Series Format
+
+
+PromQL Query Language
+	- Prometheus Web UI/Grafana uses PromQL to query Prometheus server
+
+
+Prometheus Characteristics
+	- reliable
+	- stand-alone and self-containing
+	- works even if other parts of infra broken
+	- no extensive set-up needed
+	- less complex
