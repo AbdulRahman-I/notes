@@ -1,0 +1,68 @@
+Jenkins
+
+	> Open source automation tool written in java with plugins built for Continuous Integration purpose
+
+
+To start Jenkins 
+	> Go to Jenkins path
+	> java -jar jenkins.war  --httpPort=<port_number>
+
+
+Jenkins Architecture
+
+Single Jenkin server
+
+	Dev ----> Git <----> Jenkins server <----> Selenium <----> Production server
+
+Dev			- Multiple developers will perform various commit changes to the source code
+Git			- Shared repository
+Jenkins server		- Checks the shared repo at periodic intervals, every check-in is pulled and then build
+			- Send the build and test report back to developer
+Selenium		- Jenkins deploys the build application on test server
+Prod server		- Build application then deploy to prod server
+
+Disadvantage
+	> If we want to test our builds in various test environment
+	> In Larger projects, We may get builds on regular basis. Single Jenkins server may not handle the entire loop
+
+Jenkins Distributed Arch
+	jenkins Master and Slave Arch to manage the distributed builds
+		One Jenkins Master  ---- Multiple Jenkins Slave
+
+Master
+	> Scheduling build jobs
+	> Will distribute the workload to slaves
+	> Monitoring the slaves
+	> Recording and presenting the build results
+	> may also execute build jobs directly
+
+Slave	 
+	> Works on the basis of request received from Jenkins Master. 
+	> Can run on Various OS
+	> Execute build jobs dispatched by Master
+
+Advantage
+	> Ability to run builds in parallel
+	> Automatically replacing the corrupted instances
+	> Load Distribution
+	> Cost Effective
+
+
+Configuring Master Node on Jenkins
+	> Master handle all the tasks for build system
+	> It's not mandatory to have Jenkins client
+	> For small projects, Master Jenkins can also create the build
+	> By default a Master node will be running.
+
+
+Configuring Slave Node on Jenkins
+	> Jenkins dashboard -> Manage Jenkins -> Manage Nodes
+	> Name the node and choose "Permanent Agent" and click "OK"
+
+Ways to configure Jenkins Slave agent
+	> via ssh
+	> via Jave Web Start
+	> Jenkins control this windows slave via Window service
+	> Launch agent by exec a command on the Master
+
+
