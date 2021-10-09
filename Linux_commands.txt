@@ -1,6 +1,5 @@
 Linux
-Linux® is an open source operating system (OS). An operating system is the software that directly manages a system’s hardware and resources, like CPU, memory, and storage. 
-The OS sits between applications and hardware and makes the connections between all of your software and the physical resources that do the work.
+Linux® is an open source operating system (OS). An operating system is the software that directly manages a system’s hardware and resources, like CPU, memory, and storage. The OS sits between applications and hardware and makes the connections between all of your software and the physical resources that do the work.
 
 Linux-Kernel
 The base component of the OS. Without it, the OS doesn’t work. 
@@ -249,3 +248,13 @@ SFTP
 	sftp username@hostname
 	put 			(to push a file)
 	get			(to pull a file)
+
+
+Notes
+++++++
+To see the number of lines in the doc
+	<filename> | wc -l
+
+To view top/bottom 10 lines
+	head -10 <filename>
+	tail -10 <filename>
