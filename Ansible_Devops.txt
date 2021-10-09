@@ -220,6 +220,62 @@ Comparison operators
       - "x <= y: {{x <= y}}"
 
 
+Ignore Errors
+ ---
+- hosts: localhost
+  tasks:
+    - block:
+      - command: "ls /home/ansadmin/ansible_workaround"
+        register: out_1
+      - command: "ls /hme/ansadmin/ansible_workaround"
+        register: out_2
+      - command: "ls /home/"
+        register: out_3
+      ignore_errors: yes
+    - debug: var=out_1
+    - debug: var=out_2
+    - debug: var=out_3
+
+
+Error handling
+---
+- hosts: localhost
+  tasks:
+    - block:
+      - name: Prep dummy yml for error handling
+        command: "ls -a /hme/ansadmin"
+        register: out_1
+      - debug:
+          var: out_1
+
+      rescue:
+        - debug:
+            msg: "Under rescus block due to absence of path"
+
+      always:
+        - debug:
+            msg: "Always this block will exec"
+
+
+Ansible Vault
+	> if our code contains access keys, we would not upload the code into public scm service
+	> If any sensitive data in playbook then we can encrypt and commit
+	> Ansible Vault is useful to encrypt playbooks (inc roles and variables)
+	> It encrypt anything inside YAML file, using password of our choice
+	> We need to provide password, to run playbook
+	> Syntax
+	-> ansible-vault encrypt <.yaml>
+	-> ansible-playbook <.yaml> --ask-vault-pass
+	> if we don't want provide password during runtime, then we can create passwd file and pass
+	-> ansible-playbook <.yaml> --vault-id <vault passwrd file> 
+	
+	In real world we will be creating a seperate yaml file with pwd variables and encrypt it.
+	-> main_playbook
+	    - vars_file:
+		<vault_pass.yml>
+	-> encrypted vault pass
+	-> ansible-playbook group main_playbook.yml --vault-id/--vault-password-file <passwdfile.txt>
+	
 Note:
 	> if we see denied: requested access to the resource is denied
 	  -> Add docker login CLI into playbook
@@ -242,5 +298,36 @@ ansible-playbook update_pkg.yml -e "pkg_name=git req_state=present"
       name: "{{pkg_name}}"
       state: "{{req_state}}"
 
+	> To create EC2 instance
+	  -> we need to install boto boto3 pip modules
+	  -> ec2 module to be used
+		ec2:
+		  instance_type: 
+		  image:
+		  region: 
+	  -> we can set the access key and secret key into userdir/.aws/config using aws cli
+
+To get variables from other .yaml
+	> vars_files: <.yml> in main
 
 
+Docker module
++++++++++++++
+docker_login:
+  registry_url:
+  username:
+  password:
+
+
+docker_image:
+  build:
+    path:../..
+  name:
+  tag:
+  push:
+
+docker_container:
+  name:
+  image:
+  port:
+  volume:
