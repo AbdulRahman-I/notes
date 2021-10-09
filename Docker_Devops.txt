@@ -185,7 +185,7 @@ Docker Logs
 
 Project
 ++++++++++++
-	- Go to EKS
+	- Go to ECR
 	- Create private repo of my-app
 	- After creating repo >> click on "View Push Command"
 	- Check AWS CLI installed on Docker, If yes we need to take access key and security from IAM
