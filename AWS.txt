@@ -1,0 +1,68 @@
+AWS Notes
+
+Difference between Edge Location (EL) and Availability Zone (AZ)
+	Both the Edge Locations (EL) and Availability Zones (AZ) are AWS Data Centers, 
+	But EL are primarily used for caching of the data to provide better user experience with low latency, 
+	The AZ are used for hosting servers, websites, applications, softwares, Big Data processing, analytics and a wide variety of use cases.
+
+
+Management console link
+	<Alias_name>.signin.aws.amazon.com/console
+
+
+IAM Policy
+	Effect		- Specifies whether the statement results in an allow or an explicit deny
+	Action		- Each AWS service has its own set of actions that describe tasks that you can perform with that service
+	Resource	- Specifies the object or objects that the statement covers ("Resource": "arn:aws:s3:::DOC-EXAMPLE-BUCKET/*")
+
+
+IAM Roles
+	> IAM roles are a secure way to grant permissions to entities that you trust.  
+	> Example Application code running on an EC2 instance that needs to perform actions on AWS resources
+
+
+
+Secrets Manager
+	> Instead of keeping our Database credentials in code, we can store our credentials in Secrets Manager
+	> We can rotate secrets safely with Lambda functions
+	> we will be adding code to grep the credentials and decoder base 64 into application DB link
+
+
+Shield
+	> To Protect against DDoS (Distributed Denial of Services) attack
+	> 2 Types
+	  -> AWS Shield standard	- By Default it is activated for every AWS Customer
+	  -> AWS Shield Advanced	- DDoS Mitigation service, Protect against more sophisticated attacks
+
+
+WAF - Web Application FIrewall
+	> Protect web application from common web exploits
+	> We can deploy it on Application Load Balancer, API Gateway, CloudFront
+	> We need to define Web ACL inorder to make WAF work
+	  -> We can define rules - IP addr, HTTP Header, HTTP Body
+	  -> Protects from common attack - SQL Injection and Cross-Site Scripting (XSS)
+	  -> Geo-Match (Block Contries) 
+	  -> Rate-based rules (to count occurrences of event) - for DDoS Protection
+
+
+Firewall Manager
+	> Manage rules in all accounts of AWS Organization
+	> Common set of security rules
+	> WAF rules (ALB, API Gateway, CloudFront)
+	> AWS Shield Advanced (ALB, CLB, Elastic IP, CloudFront)
+	> Security Group for EC2 and ENI resource in VPC
+
+
+GuardDuty
+	> Intelligent Threat discovery to Protect AWS Account
+	> Input data
+	  -> VPC Flow Logs	- Unusual internal traffic, unusual ip addr
+	  -> CloudTrail Logs	- Unusual API calls, unauthorized deployment
+	  -> DNS Logs		- EC2 instance sending encoded data within DNS queries
+	> Uses Machine Learning algo, anomaly detection
+	> CloudWatch Event rules to be notified
+	> Event rules can trigger Lambda or SNS for notification
+	
+PDF
+EC2 Basics	- 36
+EC2 Associate	- 68

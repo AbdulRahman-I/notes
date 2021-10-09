@@ -1,0 +1,39 @@
+Devops AWS
+++++++++++
+
+1, SSH into aws instance with created user
+  Create user and pwd in instance
+    	useradd rahman
+    	passwd rahman
+  Edit below file
+    	vi /etc/ssh/sshd_config
+      		>> PasswordAuthentication yes
+  After saving, Restart the sshd service
+	systemctl restart sshd
+
+
+Enable GUI on Ubuntu server
+++++++++++++++++++++++++++++
+Update the existing pkg
+	sudo apt-get update -y
+Install and enable xrdp 
+	sudo apt-get install xrdp -y
+	sudo systemctl enable xrdp
+
+Install gnome3 GUI
+	add-apt-repository ppa:gnome3-team/gnome3
+	apt-get install gnome-shell ubuntu-gnome-desktop
+Set passwd for ubuntu
+	sudo passwd ubuntu
+
+
+My SQL Error
+++++++++++++++
+root@Godzilla:/var/www/html/nodelogin# node dbcheck.js
+error: ER_NOT_SUPPORTED_AUTH_MODE: Client does not support authentication protocol requested by server; consider upgrading MySQL client
+root@Godzilla:/var/www/html/nodelogin#
+
+To resolve Add below lines in to mysql
+	ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';
+	flush privileges;
+
