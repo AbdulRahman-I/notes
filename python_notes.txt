@@ -740,4 +740,102 @@ s1 = Student("Anbu", 25, History=86, Chemistry=87)
 s1.getrecord()
 
 
+While loop
++++++++++++
+It is used to repeat over block of code again and again until is condition is met. 
+The while loop can be used to describe conditional iteration.
+
+while condition : 
+     list of statements
+Note the colon and indentation.
+When a program repeatedly runs a set of statements it is referred to as a loop.
+Also else statement can be used with while loop.
+
+#
+num = 1
+sum = 0
+print ("Please enter number to sum \nYou can press 0 to stop")
+while (num != 0):
+  num = int(input("Number : "))
+  sum += num
+else:
+  print ("Sum : ",sum)
+  print ("Finished Sum Operation")
+
+
+For-loop
++++++++++++
+It repeat through each of the items in a list, tuple, string, set, dictionary or any other type of object which the language considers an “iterator.” 
+The for statement allows us to iterate through a sequence of values.
+
+for item in [collection]:
+    statements
+
+When collection is a list, set or a tuple, then the loop iterate over each element of the container.
+When collection is a string, then the loop iterate over each character of the string.
+
+for someChar in “Hello World”:
+ print someChar
+
+We can also use for loop statement to write count-controlled loop. Also else statement can be used with for loop.
+
+
+Break and Continue
+++++++++++++++++++
+Break statement ends the current loop and jumps to the statement immediately following the loop. 
+Continue statement ends the current iteration and jumps to the top of the loop and starts the next iteration
+
+
+List
+++++++++
+A List in Python is a kind of Collection that allows us to put many values in a single “variable”. 
+A collection is nice because we can carry all many values around in one convenient package. 
+Values: can be anything, integers, strings, other lists
+List values are called elements. The list of all functions which can be use with Python Lists:
+['append', 'clear', 'copy', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+
+count = to identify the number of count 	>> list.count(1)
+index = to identify the index of element 	>> list.index("c")
+
+
+Tuple
++++++++
+Python Tuples are another kind of sequence that functions similar to a list - they have elements which are indexed starting at 0. 
+But Tuples are "immutable"  i.e. Unlike a list, once you create a tuple, you cannot alter its contents.
+
+Format: tuple_name = (item1, item2)
+Tuples support operations as lists i.e.Subscript indexing for retrieving elements.
+Also Methods such as index, Built in functions such as len, min, max,  Slicing expressions, The in, +, and * operators. 
+Tuples do not support the methods like append, remove, insert, reverse, sort.
+Advantages for using tuples over lists:
+1)Processing tuples is faster than processing lists
+2)Tuples are safe
+3)Some operations in Python require use of tuples
+list(tuple_var) function: converts tuple to list
+tuple(list_var) function: converts list to tuple
+
+The list of all functions which can be use with Python Tuples:
+['count', 'index']
+
+
+Set
++++++
+Sets are An unordered collection with no duplicate elements. It is Identified by curly braces e.g. {'Max', 'Tom', 'Den'}. 
+Python Sets  Can only contain unique elements, Duplicates are eliminated automatically at the time of initialization. 
+Sets have no order and also Sets do not support indexing. 
+Sets in Python can also be be used to perform mathematical set operations like union, intersection, difference and symmetric difference.
+The list of all functions which can be use with Python Sets :
+['add', 'clear', 'copy', 'difference', 'difference_update', 'discard', 'intersection', 'intersection_update', 'isdisjoint', 
+'issubset', 'issuperset', 'pop', 'remove', 'symmetric_difference', 'symmetric_difference_update', 'union', 'update']
+
+
+Dictionary
+++++++++++++++
+dictionary in python is an associative list or a map.
+We can think if dictionary as a list of pairs, where the first element of the pair, the key, is used to retrieve the second element, the value.
+Hence we map a key to a value. Dictionaries are Python’s most powerful data collection. 
+Dictionaries are like Lists except that they use keys instead of Index to lookup values.
+
+The list of all functions which can be use with Python Dictionaries :
+['clear', 'copy', 'fromkeys', 'get', 'items', 'keys', 'pop', 'popitem', 'setdefault', 'update', 'values']
 
