@@ -1,0 +1,22 @@
+VM
+	Machine with virtual environment that has own OS and shared hardware
+
+Hypervisor
+	It act as a intermediate between VM and underlying Hardwares
+
+Types
+	1, Bare metal Hypervisor	(Type 1)
+	2, Hosted 			(Type 2)
+	
+Type 1
+	> Installing the Hypervisor directly on physical server
+	> Here the Hypervisor software has direct access to Hardware, it can grant access to the VM
+	> Examples : VMWare ESXI, Microsoft HyperV
+	> Low Latency, High secure
+
+Type 2
+	> We need to install this Hypervisor on top of existing OS
+	> Here the Hypervisor do not have direct access to the Hardware, As it runs on top of Host OS
+	> Examples : Oracle, Virtual Box, VMware workstation
+	> High Latency, Low serure
+
