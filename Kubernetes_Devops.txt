@@ -1,0 +1,207 @@
+Kubernetes
+
+Definition
+	> Open source container orchestration tool
+	> Developed by Google
+	> Helps us manage containerized application in different deployment environment
+
+Need for Container orchenstration tool
+	> Due to microservices we could see the usage of containers
+	> Demands proper way of managing hundred's of containers 
+
+Features of orchestration tool
+	> High Availability	- no downtime
+	> Scalability		- high performance
+	> Disaster Recovery	- backup and restore
+
+K8S Components
+
+https://kubernetes.io/docs/concepts/overview/components/
+
+	> Node
+	  - Server either physical/virtual machine
+	
+	> Pods
+	  - Smallest unit of K8s
+	  - Abstraction over container (Layer on top of container)
+	  - Usually one application per pod
+	  - Each pod gets it own IP addr to comm with each other
+	  - New IP addr on re-creation
+	  - We can't use it with Db due to dynamic IP addr, to overcome we have service
+
+	> Service
+	  - Permanent IP addr
+	  - Even if pod went down, service will remain unchanged
+	  - To access app through browser we need external service
+	  - External service - service that open communication with external source
+	  - Internal service - private access (Db)
+	  - Load balancer
+
+	> Ingress
+	  - Secure protocol and domain name
+	  - Request goes first to ingress, it does forwarding and then goes to service
+ 
+	> ConfigMap
+	  - Usually we will be providing db url in application config file
+	  - If there is a change in url, we need to build images again and re-deploy it.
+	  - ConfigMap - external configuration of our application. It is applied to pod.
+	  - If any changes in file, it will directly reflect in pod without re-deployment
+	  - We cannot keep db pwd and username in ConfigMap as it is plain text
+
+	> Secret
+	  - To keep the sensitive/secret data
+	  - It also connected with pod
+	  - Pod uses ConfigMap and Secret as ENV or as properties file
+
+	> Volumes
+	  - To avoid data loss
+	  - Volumes keep back up of data in local or remote storage
+	  - K8s doesn't manage data persistance. we need to manage explicitely
+
+	> Deployments
+	  - What if the application goes down, we may see some downtime in prod
+	  - Replicates everything on multiple servers	
+	  - Both the master and replica servers are connected with service. it does LoadBal
+	  - Deployment - define blueprint for pods >> specify replica for pods
+	  - Db can't be replicated using Deployment
+	  - Clone/replica of database access the same shared Datastorage
+	  - We need mechanism to manage read and write of replicas to avoid data inconsistency
+
+	> StatefulSet
+	  - This managing mechanism is offered by StatefulSet
+	  - It takes care of replication, read, write and database synchronization
+	  - Deploying StatefulSet in Kubernetes cluster is not easy
+	  - DB are often hosted outside K8s cluster
+
+
+K8S Archetecture
+    3 Node process must be installed on all nodes
+	> Contaniner runtime
+	  -> We need to install a container runtime in each node of cluster so that Pods can run there
+	> Kubelet
+	  -> Interacts with both container and node
+	  -> Starts the pod with container inside
+	> Kubeproxy
+	  -> Responsible for forwarding request from service to pods
+	  -> It makes sure comm works in a performance way with less overhead
+
+
+Interact with Cluster
+	> Managing process are done by master node
+	> 4 process runs on master node (Mater processes)
+	  - API Server
+		- Client tries to comm with API server. Kubectl, Kubernetes dashboard
+		- Cluster Gateway, it gets the initial request like update, query
+		- Act as a gatekeeper for authentication (Only authenticated authorised req gets through)
+		- Request >> API Server >> Validate request >> other process > Pod
+	  - Scheduler
+		- Sheduling new pod
+		- API Server  >> Scheduler >> Where to put the pod >> kubelet 
+		- Schedule the new pod on less resource used node
+	  - Controller Manager
+		- Detects cluster state changes
+		- Tries to recover the state if went wrong
+		- Controller Manager >> Scheduler (re-schedule) >> Kubelet
+	  - ETCD
+		- Key value store of Cluster state (Cluster Brain)
+		- Every change in the cluster get stored in the key value store
+		- Contains the data of resources available, cluster state change, Cluster health
+		- Application data is not stored here
+
+
+Example Cluster set-up
+	> 2 master nodes  - More important but less workload 		(low  CPU/RAM/STORAGE)
+	> 3 worker nodes  - More resource needed in running pods	(high CPU/RAM/STORAGE)
+	> Add new master/node server
+	  - Get server >> install master/node processes  >>  Add it to cluster
+
+Kubernetes
+1, Imperative Approach
+2, Declarative Approach
+
+Kubectl
+
+To create a deployment
+	> kubectl create deployment <dep-name> --image=<image-name>
+To delete
+	> kubectl delete deployment <dep-name>
+To get pods details
+	> kubectl get pods 
+To expose deployment to outside
+	> kubectl expose deployment <dep-name> --type=LoadBalancer --port=8080
+To get services
+	> Kubectl get services
+    If there is no Externel ip then we need to create service with minikube
+ 	> minikube service <dep-name>
+To scale deployment manually
+    Scale up
+	> kubectl scale deployment/<dep-name> --replicas=3
+    Scale down
+	> kubectl scale deployment/<dep-name> --replicas=1
+To update the deployment
+	> kubectl set image deployment/<dep-name> <container-name>=<mod image-name>
+    Note:- Deployment will get update only if there is a change in image tag
+To view current updating status
+	> kubectl rollout status deployment/<dep-name>
+To undo the latest deployment to previous in case of any issue
+	> kubectl rollout undo deployment/<dep-name> 
+To view the deployment history
+	> kubectl rollout history deployment/<dep-name>
+To goback to specific revision
+	> kubectl rollout undo deployment/<dep-name> --to-revision=1
+To delete 
+	> kubectl delete service <dep-name>
+	> kubectl delete deployment <dep-name>
+To create configuration files declaratively
+	> kubectl apply -f=deployment.yaml 
+To delete resource in declarative way
+	> kubectl delete -f=deployment.yaml
+
+How Dev will push images into ECR?
+	> lambda to get Accesskey and pushing into docker registry
+
+Service Type
+ClusterIP (default) - Exposes the Service on an internal IP in the cluster. This type makes the Service only reachable from within the cluster.
+NodePort - Exposes the Service on the same port of each selected Node in the cluster using NAT. Makes a Service accessible from outside the cluster using <NodeIP>:<NodePort>. Superset of ClusterIP.
+LoadBalancer - Creates an external load balancer in the current cloud (if supported) and assigns a fixed, external IP to the Service. Superset of NodePort.
+
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep_l
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dep_1
+  template:
+    metadata:
+      labels:
+        app: dep_1
+    spec:
+      containers:
+      - name:
+        image:
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          periodSeconds: 10
+          initialDelaySeconds: 5
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: service_1
+spec:
+  selector:
+    app: dep_1
+  ports:
+  - protocol: 'TCP'
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
+  
+
