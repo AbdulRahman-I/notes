@@ -1,0 +1,7 @@
+Professional DevOps Engineer
+
+Syllabus
+https://cloud.google.com/certification/guides/cloud-devops-engineer
+
+Courses
+https://www.coursera.org/professional-certificates/sre-devops-engineer-google-cloud?action=enroll#courses
